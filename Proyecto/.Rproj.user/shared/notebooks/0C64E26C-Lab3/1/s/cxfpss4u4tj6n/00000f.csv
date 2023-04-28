@@ -1,0 +1,15 @@
+"0","DF <- read_csv(""Datos_Diversos.csv"")"
+"2","New names:"
+"2","Warning: [38;5;232mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat)[39m"
+"2","[1mRows: [22m[34m2225[39m [1mColumns: [22m[34m20[39m"
+"2","[36m──[39m [1mColumn specification[22m [36m───────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m (15): Período, Sección, Edad, Peso (kg), Signo del zodiaco, Sexo, Carrera, Tiempo de reacción, Jueg...
+[32mdbl[39m  (1): Ciclo
+[32mnum[39m  (1): Estatura (cm)
+[33mlgl[39m  (3): Indicaciones, ...19, ...20"
+"2","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message."

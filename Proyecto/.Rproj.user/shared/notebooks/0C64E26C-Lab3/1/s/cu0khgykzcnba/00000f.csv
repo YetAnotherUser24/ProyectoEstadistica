@@ -1,0 +1,2 @@
+"0","filas_a_eliminar <- c(1928:2223)"
+"0","DFN <- DFN[-filas_a_eliminar,]"

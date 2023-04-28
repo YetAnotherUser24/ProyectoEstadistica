@@ -1,0 +1,2 @@
+"0",""
+"0","    select(DFN, ends_with(""lo"")) #selecciona de DFN las variables que terminan en ""lo"""

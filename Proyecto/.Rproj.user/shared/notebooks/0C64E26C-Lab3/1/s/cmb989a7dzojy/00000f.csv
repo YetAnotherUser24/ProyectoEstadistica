@@ -1,0 +1,2 @@
+"0","DFN$Video[DFN$Video %in% c(""no"",""NO"")] <- ""No"""
+"0","DFN$Video[DFN$Video %in% c(""SI"",""sí"",""Sí"",""SÍ"",""si"")] <- ""Si"""

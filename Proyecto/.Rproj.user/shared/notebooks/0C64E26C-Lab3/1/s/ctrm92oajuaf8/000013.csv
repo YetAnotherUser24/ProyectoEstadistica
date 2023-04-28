@@ -1,0 +1,2 @@
+"0",""
+"0","    select(DFN, contains(""po"")) #selecciona de DFN las variables que contienen ""po"""
