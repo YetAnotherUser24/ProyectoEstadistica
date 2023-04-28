@@ -1,1 +1,0 @@
-"0","DFN <- dplyr::rename(DF, Periodo = 'Período', Seccion = 'Sección', Estatura = 'Estatura (cm)', Peso = 'Peso (kg)', Signo = 'Signo del zodiaco',Tiempo = 'Tiempo de reacción', Video = 'Juega videojuegos', Deporte = 'Hace deporte', Color = 'Color favorito', Zapato = 'Talla de zapato', Polo = 'Talla de polo', SO = 'Sistema operativo', Fecha = 'Fecha de nacimiento') "

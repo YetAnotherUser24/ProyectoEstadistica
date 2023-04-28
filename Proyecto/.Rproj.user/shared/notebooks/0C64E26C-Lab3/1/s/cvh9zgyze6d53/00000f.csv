@@ -1,2 +1,0 @@
-"0","DFN <- select(DFN,-...19) #Se elimina la columna 19"
-"0","DFN <- select(DFN,-...20) #Se elimina la columna 20"
