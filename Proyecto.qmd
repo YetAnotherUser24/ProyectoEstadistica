@@ -20,7 +20,7 @@ output:
 # **Alumnos del grupo:**
 
 | Alumno                          | **Código**    | **Correo**                     | **Porcentaje de Trabajo** |
-|--------------------|----------------|--------------------|----------------|
+|-------------------|------------------|-------------------|------------------|
 | ***Samir Stefano Suarez Rios*** | **202210611** | **samir.suarez\@utec.edu.pe**  | **x%**                    |
 | **Shaquira**                    | **201610002** | **María.salinas\@utec.edu.pe** | **x%**                    |
 | **Caballito Hurtado**           | **201610002** | **María.salinas\@utec.edu.pe** | **x%**                    |
@@ -28,80 +28,123 @@ output:
 
 # **Tema**
 
-Análisis de la relación entre el número de pasajeros y los ingresos totales por aeropuerto y mes en el Perú desde el año 2020 a 2022.
-
-# **Introducción**
-
-Según estudios recientes el café tiene muchas propiedades muy buenas para la salud.\
-El café estimula al cerebro y se tiene menos posibilidades de adquirir enfermedades que hoy en día dañan al cerebro.
+Análisis mensual de la relación entre número de pasajeros e ingresos totales por aeropuerto (2020-2022)
 
 # **Objetivo**
 
-El objetivo del presente proyecto es determinar la influencia del número de pasajeros en los ingresos totales por mes y año en cada aeropuerto en el Perú.
+Evaluar la influencia del número de pasajeros en los ingresos totales por mes y año en cada aeropuerto en el Perú.
 
 ## Objetivo Secundarios
 
 -   Comparar los ingresos totales durante la pandemia y post pandemia en el Perú.
+-   Comparar los ingresos totales de los rubros en los aeropuertos del Perú.
+-   Determinar la relación de los Check In y los despegues en los aeropuertos del Perú.
 
--   Analizar la re-activación del uso de transporte aéreo en el Perú.
-
--   Analizar la re-activación del turismo en el Perú.
-
-### Librerías
+# Librerías
 
 ```{r}
 library(plyr)
 library(dplyr)
 library(readr)
+rm(list=ls())
 ```
 
-### Tablas
+# Tablas
 
 ```{r}
-RIT <- read_csv("RecaudacionIngresosTotales.csv")
-RIR <- read_csv("RecaudacionIngresosRegulados.csv")
-TC <- read_csv("TraficoCarga.csv")
-TO <- read_csv("TraficoOperaciones.csv")
+IT <- read_csv("RecaudacionIngresosTotales.csv")
+IR <- read_csv("RecaudacionIngresosRegulados.csv")
 TP <- read_csv("TraficoPasajeros.csv")
 ```
 
-```{r}
-v = 1:50
-RIT[v,]
+# Limpieza de datos
 
-PN <- filter(TP, `Tipo de Pasajero` == "NACIONAL")
-PI <- filter(TP, `Tipo de Pasajero` == "INTERNACIONAL")
-filter(TP, `Tipo de Pasajero` == "TRANSFERECIA Y TRASITO")
-ON <- filter(TO, `Tipo vuelo` == "Oper. NACIONALES")
-filter(TO, `Tipo vuelo` == "Oper. INTERNACIONALES")
-filter(TO, `Tipo vuelo` == "Oper. MILITARES")
-filter(TO, `Tipo vuelo` == "Oper. INSTRUCCIÓN")
-filter(TC, `Tipo de carga` == "carga internacional")
-filter(TC, `Tipo de carga` == "carga nacional")
-```
+## Creando el dataframe
 
 ```{r}
+# MESES:
+m <- c("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Setiembre","Octubre","Noviembre","Diciembre")
 
 
-table(TP$`Tipo de Pasajero`)
-table(TO$`Tipo vuelo`)
-table(TC$`Tipo de carga`)
-table(TO$`Tipo vuelo`)
-table(RIT$`Rubro Ingreso`)
-#table(RIT$`Tipo Ingreso`)
-table(RIR$`Tipo de ingreso`)
-table(RIR$`Rubro Ingreso`)
+# AEROPUERTOS:
+v <- c("Andahuaylas","Arequipa","Atalaya","Ayacucho","Cajamarca","Chachapoyas","Chiclayo","Chimbote","Cusco","Huánuco","Huaraz-Anta","Ilo","Iquitos","Jaén","Jauja","Juanjui","Juliaca","Lima","Mazamari","Moquegua","Nazca","Pisco","Piura","Pucallpa","Puerto Maldonado","Rioja","Rodríguez de Mendoza","Tacna","Talara","Tarapoto","Tingo","María","Tocache","Trujillo","Tumbes","Yurimaguas")
 
-```
 
-```{r}
-#DataFrame
-colum <- c(1:5)
-PN$Aeropuerto <- factor(PN$Aeropuerto)
-PN
-PI
-DF <- data.frame(PN[1:5]) 
-names(DF)
-DF <- select(DF, -Periodo)
+# CREAMOS 3 DF CON LOS AÑOS (2020,2021,2022):
+DF2020 <- data.frame(rep(c(2020), length(v)*length(m)), rep(m,length(v)),rep(v,length(m)))
+
+DF2020 <- rename(DF2020, "Año"="rep.c.2020...length.v....length.m..", "Mes" = "rep.m..length.v..", "Aeropuerto"= "rep.v..length.m.." )
+DF2020$Aeropuerto <- sort(DF2020$Aeropuerto)
+arrange(DF2020, Aeropuerto)
+
+
+DF2021 <- data.frame(rep(c(2021), length(v)*length(m)), rep(m,length(v)),rep(v,length(m)))
+
+DF2021 <- rename(DF2021, "Año"="rep.c.2021...length.v....length.m..", "Mes" = "rep.m..length.v..", "Aeropuerto"= "rep.v..length.m.." )
+DF2021$Aeropuerto <- sort(DF2021$Aeropuerto)
+arrange(DF2021, Aeropuerto)
+
+
+DF2022 <- data.frame(rep(c(2022), length(v)*length(m)), rep(m,length(v)),rep(v,length(m)))
+
+DF2022 <- rename(DF2022, "Año"="rep.c.2022...length.v....length.m..", "Mes" = "rep.m..length.v..", "Aeropuerto"= "rep.v..length.m.." )
+DF2022$Aeropuerto <- sort(DF2022$Aeropuerto)
+arrange(DF2022, Aeropuerto)
+
+
+# COMBINAMOS LOS 3DF EN UN DF COMPLETO:
+DF <- merge(DF2020,DF2021, by = c("Año","Mes","Aeropuerto"), all = TRUE)
+DF <- merge(DF,DF2022, by = c("Año","Mes","Aeropuerto"), all = TRUE)
 DF
+```
+
+## Uniendo la variable Numero de Pasajeros Internacionales (NPI)
+
+```{r}
+PI <- filter(TP, `Tipo de Pasajero` == "INTERNACIONAL")
+PI <- filter(PI,Año %in% c(2020,2021,2022))
+PI <- select(PI, -Periodo)
+PI <- select(PI, -`Tipo de Pasajero`)
+```
+
+```{r}
+DF <- merge(DF,PI, by = c("Año","Mes","Aeropuerto"), all = TRUE)
+DF <- rename(DF, "NPI" = "Nro Pasajeros")
+```
+
+## Uniendo la variable Numero de Pasajeros Naciones (NPN)
+
+```{r}
+PN <- filter(TP, `Tipo de Pasajero` == "NACIONAL")
+PN <- filter(PN,Año %in% c(2020,2021,2022))
+PN <- select(PN, -Periodo)
+PN <- select(PN, -`Tipo de Pasajero`)
+```
+
+```{r}
+DF <- merge(DF,PN, by = c("Año","Mes","Aeropuerto","Infraestructura"), all=TRUE)
+DF <- rename(DF, "NPN" = "Nro Pasajeros")
+```
+
+## Uniendo la variable Ingreso Rubro Aterrizaje y Despegue (IRAD)
+
+```{r}
+IRAD <- filter(IT, `Rubro Ingreso` == "ATERRIZAJE Y DESPEGUE")
+IRAD <- filter(IRAD,Año %in% c(2020,2021,2022))
+IRAD <- select(IRAD, -'Tipo Ingreso')
+IRAD <- select(IRAD, -'Rubro Ingreso')
+IRAD <- select(IRAD, -'Periodo')
+```
+
+```{r}
+DF <- merge(DF, IRAD, by = c("Año","Mes","Aeropuerto","Infraestructura"), all=TRUE)
+DF <- rename(DF, "IRAD" = "Importe por Servicios")
+```
+
+## Eliminación de datos 
+
+```{r}
+# Si es que no tenemos el nombre del aeropuerto o su infraestructura (Siempre debe venir acompañada del nombre), la unidad muestral no podrá entrar al análisis pues por ejemplo si nos dicen cuanto gano un aeropuerto desconocido, esto no nos dirá nada.
+
+DF <- filter(DF, Infraestructura != is.na("Infraestructura") & Aeropuerto != is.na("Aeropuerto"))
 ```
