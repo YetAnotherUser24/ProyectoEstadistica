@@ -1,20 +1,45 @@
 ---
-title: "ProyectoNotebook"
-format: html
+title: "Estadisticas sobre los aeropuertos"
+author: "Grupo 7, Sección 9"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
 editor: visual
+format: html
+output:
+  html_notebook:
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: no
+    number_sections: yes
+
+  html_document:
+    toc: yes
+    df_print: paged
 ---
 
-## Tema
+# **Alumnos del grupo:**
+
+| Alumno                          | **Código**    | **Correo**                     | **Porcentaje de Trabajo** |
+|---------------------------------|---------------|--------------------------------|---------------------------|
+| ***Samir Stefano Suarez Rios*** | **202210611** | **samir.suarez\@utec.edu.pe**  | **x%**                    |
+| **Shaquira**                    | **201610002** | **María.salinas\@utec.edu.pe** | **x%**                    |
+| **Caballito Hurtado**           | **201610002** | **María.salinas\@utec.edu.pe** | **x%**                    |
+| **Chriss Martin de Coldplay**   | **201610002** | **María.salinas\@utec.edu.pe** | **x%**                    |
+
+# **Tema**
 
 Análisis de la relación entre el número de pasajeros y los ingresos totales por aeropuerto y mes en el Perú desde el año 2020 a 2022.
 
-## Objetivos
+# **Introducción**
 
-### Objetivo Principal:
+Según estudios recientes el café tiene muchas propiedades muy buenas para la salud.\
+El café estimula al cerebro y se tiene menos posibilidades de adquirir enfermedades que hoy en día dañan al cerebro.
 
-Determinar la influencia del número de pasajeros en los ingresos totales por mes y año en cada aeropuerto en el Perú.
+# **Objetivo**
 
-### Objetivos Secundarios:
+El objetivo del presente proyecto es determinar la influencia del número de pasajeros en los ingresos totales por mes y año en cada aeropuerto en el Perú.
+
+## Objetivo Secundarios
 
 -   Comparar los ingresos totales durante la pandemia y post pandemia en el Perú.
 
@@ -44,10 +69,10 @@ TP <- read_csv("TraficoPasajeros.csv")
 v = 1:50
 RIT[v,]
 
-filter(TP, `Tipo de Pasajero` == "NACIONAL")
+PN <- filter(TP, `Tipo de Pasajero` == "NACIONAL")
 filter(TP, `Tipo de Pasajero` == "INTERNACIONAL")
 filter(TP, `Tipo de Pasajero` == "TRANSFERECIA Y TRASITO")
-filter(TO, `Tipo vuelo` == "Oper. NACIONALES")
+ON <- filter(TO, `Tipo vuelo` == "Oper. NACIONALES")
 filter(TO, `Tipo vuelo` == "Oper. INTERNACIONALES")
 filter(TO, `Tipo vuelo` == "Oper. MILITARES")
 filter(TO, `Tipo vuelo` == "Oper. INSTRUCCIÓN")
@@ -70,7 +95,11 @@ table(RIR$`Rubro Ingreso`)
 ```
 
 ```{r}
-
-table(TP$Infraestructura)
-
+#DataFrame
+colum <- c(1:5)
+PN$Aeropuerto <- factor(PN$Aeropuerto)
+group_by(PN,PN$Aeropuerto)
+group_by(PN,PN$Mes)
+PN
+#DF <- data.frame(select(Infraestructura)) 
 ```
