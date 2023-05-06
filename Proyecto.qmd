@@ -20,7 +20,7 @@ output:
 # **Alumnos del grupo:**
 
 | Alumno                          | **Código**    | **Correo**                     | **Porcentaje de Trabajo** |
-|---------------------------------|---------------|--------------------------------|---------------------------|
+|--------------------|----------------|--------------------|----------------|
 | ***Samir Stefano Suarez Rios*** | **202210611** | **samir.suarez\@utec.edu.pe**  | **x%**                    |
 | **Shaquira**                    | **201610002** | **María.salinas\@utec.edu.pe** | **x%**                    |
 | **Caballito Hurtado**           | **201610002** | **María.salinas\@utec.edu.pe** | **x%**                    |
@@ -70,7 +70,7 @@ v = 1:50
 RIT[v,]
 
 PN <- filter(TP, `Tipo de Pasajero` == "NACIONAL")
-filter(TP, `Tipo de Pasajero` == "INTERNACIONAL")
+PI <- filter(TP, `Tipo de Pasajero` == "INTERNACIONAL")
 filter(TP, `Tipo de Pasajero` == "TRANSFERECIA Y TRASITO")
 ON <- filter(TO, `Tipo vuelo` == "Oper. NACIONALES")
 filter(TO, `Tipo vuelo` == "Oper. INTERNACIONALES")
@@ -98,8 +98,10 @@ table(RIR$`Rubro Ingreso`)
 #DataFrame
 colum <- c(1:5)
 PN$Aeropuerto <- factor(PN$Aeropuerto)
-group_by(PN,PN$Aeropuerto)
-group_by(PN,PN$Mes)
 PN
-#DF <- data.frame(select(Infraestructura)) 
+PI
+DF <- data.frame(PN[1:5]) 
+names(DF)
+DF <- select(DF, -Periodo)
+DF
 ```
