@@ -20,9 +20,9 @@ output:
 # **Alumnos del grupo:**
 
 | Alumno                          | **Código**    | **Correo**                     | **Porcentaje de Trabajo** |
-|-------------------|------------------|-------------------|------------------|
+|-------------------|-----------------|-------------------|-----------------|
 | ***Samir Stefano Suarez Rios*** | **202210611** | **samir.suarez\@utec.edu.pe**  | **x%**                    |
-| **Shaquira**                    | **201610002** | **María.salinas\@utec.edu.pe** | **x%**                    |
+| **Milton Esteban Robles Reyes** | **202210416** | **milton.robles\@utec.edu.pe** | **x%**                    |
 | **Caballito Hurtado**           | **201610002** | **María.salinas\@utec.edu.pe** | **x%**                    |
 | **Chriss Martin de Coldplay**   | **201610002** | **María.salinas\@utec.edu.pe** | **x%**                    |
 
@@ -32,13 +32,15 @@ Análisis mensual de la relación entre número de pasajeros e ingresos totales 
 
 # **Objetivo**
 
-Evaluar la influencia del número de pasajeros en los ingresos totales por mes y año en cada aeropuerto en el Perú.
+Evaluar la influencia del número de pasajeros en los ingresos totales (S/.) por mes y año en cada aeropuerto en el Perú.
 
 ## Objetivo Secundarios
 
--   Comparar los ingresos totales durante la pandemia y post pandemia en el Perú.
--   Comparar los ingresos totales de los rubros en los aeropuertos del Perú.
+-   Comparar los ingresos totales (S/.) durante la pandemia y post pandemia en el Perú.
+-   Comparar los ingresos totales (S/.) de los rubros ( ) en los aeropuertos del Perú.
 -   Determinar la relación de los Check In y los despegues en los aeropuertos del Perú.
+
+## Tabla de variables
 
 # Librerías
 
@@ -60,6 +62,11 @@ TP <- read_csv("TraficoPasajeros.csv")
 # Limpieza de datos
 
 ## Creando el dataframe
+
+```{r}
+IT %>% mutate(Periodo = as.numeric(Periodo)) %>% full_join(IR, by = c("Año", "Mes","Periodo", "Infraestructura", "Aeropuerto", "Rubro Ingreso", "Importe por Servicios")) %>% full_join(TP, by = c("Año", "Mes","Periodo", "Infraestructura", "Aeropuerto")) ->DFN
+co
+```
 
 ```{r}
 # MESES:
@@ -124,6 +131,7 @@ PN <- select(PN, -`Tipo de Pasajero`)
 ```{r}
 DF <- merge(DF,PN, by = c("Año","Mes","Aeropuerto","Infraestructura"), all=TRUE)
 DF <- rename(DF, "NPN" = "Nro Pasajeros")
+DF <- rename(DF, "Infraestructura" = "Infraestructura.x")
 ```
 
 ## Uniendo la variable Ingreso Rubro Aterrizaje y Despegue (IRAD)
@@ -138,13 +146,52 @@ IRAD <- select(IRAD, -'Periodo')
 
 ```{r}
 DF <- merge(DF, IRAD, by = c("Año","Mes","Aeropuerto","Infraestructura"), all=TRUE)
+DF <- rename(DF, "IRAD_VER" = "Importe por Servicios")
+```
+
+```{r}
+DF <- merge(DF, IRAD, by = c("Año","Mes","Aeropuerto","Infraestructura"), all=TRUE)
 DF <- rename(DF, "IRAD" = "Importe por Servicios")
 ```
 
-## Eliminación de datos 
+## Eliminación de datos
 
 ```{r}
 # Si es que no tenemos el nombre del aeropuerto o su infraestructura (Siempre debe venir acompañada del nombre), la unidad muestral no podrá entrar al análisis pues por ejemplo si nos dicen cuanto gano un aeropuerto desconocido, esto no nos dirá nada.
 
 DF <- filter(DF, Infraestructura != is.na("Infraestructura") & Aeropuerto != is.na("Aeropuerto"))
+```
+
+```{r}
+PDE <- filter(IT, `Rubro Ingreso` == "ALQUILERES DE ALMACEN/HANGAR")
+PDE <- filter(PDE,Año %in% c(2020,2021,2022))
+PDE <- select(PDE, -'Tipo Ingreso')
+PDE <- select(PDE, -'Rubro Ingreso')
+PDE <- select(PDE, -'Periodo')
+```
+
+```{r}
+DF <- merge(DF, PDE, by = c("Año","Mes","Aeropuerto","Infraestructura"), all=TRUE)
+DF <- rename(DF, "123" = "Importe por Servicios")
+DF <- select(DF, Año:NPN)
+```
+
+```{r}
+table(IT$`Rubro Ingreso`)
+filter(PDE, Año >= 2020)
+sum(complete.cases(DF))
+```
+
+```{r}
+DF$NPI[is.na(DF$NPI)] <- 0
+DF$NPN[is.na(DF$NPN)] <- 0
+DF$IRADI[is.na(DF$IRADI)] <- 0
+DF$IRADI[DF$IRADI >= 1] <- "Si"
+DF$IRADI[DF$IRADI == "0"] <- "No"
+DF$IRAD[is.na(DF$IRAD)] <- 0
+```
+
+```         
+git config --global user.email "you@example.com"
+  git config --global user.name "Your Name"
 ```
