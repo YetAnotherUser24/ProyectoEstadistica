@@ -56,7 +56,7 @@ rm(list=ls())
 ```{r}
 IT <- read_csv("RecaudacionIngresosTotales.csv")
 IR <- read_csv("RecaudacionIngresosRegulados.csv")
-Tp<- read_csv("TraficoPasajeros.csv")
+TP <- read_csv("TraficoPasajeros.csv")
 ```
 
 # Limpieza de datos
@@ -178,8 +178,6 @@ DF <- merge(DF, IRAD, by = c("Año","Mes","Aeropuerto","Infraestructura"), all=T
 DF <- rename(DF, "IRAD" = "Importe por Servicios")
 ```
 
-<<<<<<< HEAD
-=======
 ```{r}
 #Reemplazo de N/A's por 0
 DF$IRAD_VER[is.na(DF$IRAD_VER)] <- 0
@@ -443,7 +441,6 @@ DF$IRR_VER[DF$IRR_VER == "0"] <- "No"
 DF$IRR[is.na(DF$IRR)] <- 0
 ```
 
->>>>>>> 8424e233bff1cf6c367d5041cf0f9f67ec222c73
 ## Eliminación de datos
 
 ```{r}
@@ -453,13 +450,7 @@ DF <- filter(DF, Infraestructura != is.na("Infraestructura") & Aeropuerto != is.
 ```
 
 ```{r}
-<<<<<<< HEAD
-
-
- 
-=======
 table(IT$`Rubro Ingreso`)
 sum(complete.cases(DF))
 unique(DF$Infraestructura)
->>>>>>> 8424e233bff1cf6c367d5041cf0f9f67ec222c73
 ```
