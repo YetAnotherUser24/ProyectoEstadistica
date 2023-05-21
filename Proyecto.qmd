@@ -22,7 +22,7 @@ output:
 | Alumno                          | **Código**    | **Correo**                     | **Porcentaje de Trabajo** |
 |------------------|------------------|------------------|------------------|
 | ***Samir Stefano Suarez Rios*** | **202210611** | **samir.suarez\@utec.edu.pe**  | **x%**                    |
-| **Shaquira**                    | **201610002** | **María.salinas\@utec.edu.pe** | **x%**                    |
+| **Milton Esteban Robles Reyes** | **202210416** | **milton.robles\@utec.edu.pe** | **x%**                    |
 | **Caballito Hurtado**           | **201610002** | **María.salinas\@utec.edu.pe** | **x%**                    |
 | **Chriss Martin de Coldplay**   | **201610002** | **María.salinas\@utec.edu.pe** | **x%**                    |
 
@@ -32,13 +32,15 @@ Análisis mensual de la relación entre número de pasajeros e ingresos totales 
 
 # **Objetivo**
 
-Evaluar la influencia del número de pasajeros en los ingresos totales por mes y año en cada aeropuerto en el Perú.
+Evaluar la influencia del número de pasajeros en los ingresos totales (S/.) por mes y año en cada aeropuerto en el Perú.
 
 ## Objetivo Secundarios
 
--   Comparar los ingresos totales durante la pandemia y post pandemia en el Perú.
--   Comparar los ingresos totales de los rubros en los aeropuertos del Perú.
+-   Comparar los ingresos totales (S/.) durante la pandemia y post pandemia en el Perú.
+-   Comparar los ingresos totales (S/.) de los rubros ( ) en los aeropuertos del Perú.
 -   Determinar la relación de los Check In y los despegues en los aeropuertos del Perú.
+
+## Tabla de variables
 
 # Librerías
 
@@ -60,6 +62,10 @@ Tp<- read_csv("TraficoPasajeros.csv")
 # Limpieza de datos
 
 ## Creando el dataframe
+
+```{r}
+IT %>% mutate(Periodo = as.numeric(Periodo)) %>% full_join(IR, by = c("Año", "Mes","Periodo", "Infraestructura", "Aeropuerto", "Rubro Ingreso", "Importe por Servicios")) %>% full_join(TP, by = c("Año", "Mes","Periodo", "Infraestructura", "Aeropuerto")) ->DFN
+```
 
 ```{r}
 # MESES:
@@ -95,7 +101,8 @@ arrange(DF2022, Aeropuerto)
 # COMBINAMOS LOS 3DF EN UN DF COMPLETO:
 DF <- merge(DF2020,DF2021, by = c("Año","Mes","Aeropuerto"), all = TRUE)
 DF <- merge(DF,DF2022, by = c("Año","Mes","Aeropuerto"), all = TRUE)
-DF
+
+
 ```
 
 ## Uniendo la variable Numero de Pasajeros Internacionales (NPI)
@@ -112,6 +119,24 @@ DF <- merge(DF,PI, by = c("Año","Mes","Aeropuerto"), all = TRUE)
 DF <- rename(DF, "NPI" = "Nro Pasajeros")
 ```
 
+```{r}
+DF <- mutate(DF,Infraestructuras=case_when(Infraestructura == 'AAP' ~'Aeropuertos Andinos del Perú S.A.',Infraestructura == 'COR' ~'CORPAC S.A.',Infraestructura == 'ADP' ~'Aeropuertos del Perú S.A.',Infraestructura == 'LAP' ~'Lima Airport Partners S.R.L.'))
+DF <- select(DF, -Infraestructura)
+DF <- select(DF, -NPI)
+```
+
+```{r}
+DF <- merge(DF,PI, by = c("Año","Mes","Aeropuerto"), all = TRUE)
+DF <- rename(DF, "NPI" = "Nro Pasajeros")
+```
+
+```{r}
+#Reemplazo de N/A's por 0
+DF <- select(DF, -Infraestructura)
+DF <- rename(DF, Infraestructura = Infraestructuras)
+DF$NPI[is.na(DF$NPI)] <- 0
+```
+
 ## Uniendo la variable Numero de Pasajeros Naciones (NPN)
 
 ```{r}
@@ -124,9 +149,15 @@ PN <- select(PN, -`Tipo de Pasajero`)
 ```{r}
 DF <- merge(DF,PN, by = c("Año","Mes","Aeropuerto","Infraestructura"), all=TRUE)
 DF <- rename(DF, "NPN" = "Nro Pasajeros")
+DF <- rename(DF, "Infraestructura" = "Infraestructura.x")
 ```
 
-## Uniendo la variable Ingreso Rubro Aterrizaje y Despegue (IRAD)
+```{r}
+#Reemplazo de N/A's por 0
+DF$NPN[is.na(DF$NPN)] <- 0
+```
+
+## Uniendo la variable Ingreso Rubro ATERRIZAJE Y DESPEGUE (IRAD)
 
 ```{r}
 IRAD <- filter(IT, `Rubro Ingreso` == "ATERRIZAJE Y DESPEGUE")
@@ -137,10 +168,282 @@ IRAD <- select(IRAD, -'Periodo')
 ```
 
 ```{r}
+#Creación de variable de verificación para reemplazo de N/A's
+DF <- merge(DF, IRAD, by = c("Año","Mes","Aeropuerto","Infraestructura"), all=TRUE)
+DF <- rename(DF, "IRAD_VER" = "Importe por Servicios")
+```
+
+```{r}
 DF <- merge(DF, IRAD, by = c("Año","Mes","Aeropuerto","Infraestructura"), all=TRUE)
 DF <- rename(DF, "IRAD" = "Importe por Servicios")
 ```
 
+<<<<<<< HEAD
+=======
+```{r}
+#Reemplazo de N/A's por 0
+DF$IRAD_VER[is.na(DF$IRAD_VER)] <- 0
+DF$IRAD_VER[DF$IRAD_VER != 0] <- "Si"
+DF$IRAD_VER[DF$IRAD_VER == "0"] <- "No"
+DF$IRAD[is.na(DF$IRAD)] <- 0
+```
+
+## Uniendo la variable Ingreso Rubro ALQUILER AREAS DE MANTENIMIENTO (AADM)
+
+```{r}
+AADM <- filter(IT, `Rubro Ingreso` == "ALQUILER AREAS DE MANTENIMIENTO")
+AADM <- filter(AADM,Año %in% c(2020,2021,2022))
+AADM <- select(AADM, -'Tipo Ingreso')
+AADM <- select(AADM, -'Rubro Ingreso')
+AADM <- select(AADM, -'Periodo')
+```
+
+```{r}
+#Creación de variable de verificación para reemplazo de N/A's
+DF <- merge(DF, AADM, by = c("Año","Mes","Aeropuerto","Infraestructura"), all=TRUE)
+DF <- rename(DF, "AADM_VER" = "Importe por Servicios")
+```
+
+```{r}
+DF <- merge(DF, AADM, by = c("Año","Mes","Aeropuerto","Infraestructura"), all=TRUE)
+DF <- rename(DF, "AADM" = "Importe por Servicios")
+```
+
+```{r}
+#Reemplazo de N/A's por 0
+DF$AADM_VER[is.na(DF$AADM_VER)] <- 0
+DF$AADM_VER[DF$AADM_VER != 0] <- "Si"
+DF$AADM_VER[DF$AADM_VER == "0"] <- "No"
+DF$AADM[is.na(DF$AADM)] <- 0
+```
+
+## Uniendo la variable Ingreso ALQUILER DE ESPACIOS PUBLICITARIOS (ADEP)
+
+```{r}
+ADEP <- filter(IT, `Rubro Ingreso` == "ALQUILER DE ESPACIOS PUBLICITARIOS")
+ADEP <- filter(ADEP,Año %in% c(2020,2021,2022))
+ADEP <- select(ADEP, -'Tipo Ingreso')
+ADEP <- select(ADEP, -'Rubro Ingreso')
+ADEP <- select(ADEP, -'Periodo')
+```
+
+```{r}
+#Creación de variable de verificación para reemplazo de N/A's
+DF <- merge(DF, ADEP, by = c("Año","Mes","Aeropuerto","Infraestructura"), all=TRUE)
+DF <- rename(DF, "ADEP_VER" = "Importe por Servicios")
+```
+
+```{r}
+DF <- merge(DF, ADEP, by = c("Año","Mes","Aeropuerto","Infraestructura"), all=TRUE)
+DF <- rename(DF, "ADEP" = "Importe por Servicios")
+```
+
+```{r}
+#Reemplazo de N/A's por 0
+DF$ADEP_VER[is.na(DF$ADEP_VER)] <- 0
+DF$ADEP_VER[DF$ADEP_VER != 0] <- "Si"
+DF$ADEP_VER[DF$ADEP_VER == "0"] <- "No"
+DF$ADEP[is.na(DF$ADEP)] <- 0
+```
+
+## Uniendo la variable Ingreso ALQUILER LOCALES COMERCIALES (ALC)
+
+```{r}
+ALC <- filter(IT, `Rubro Ingreso` == "ALQUILER LOCALES COMERCIALES")
+ALC <- filter(ALC,Año %in% c(2020,2021,2022))
+ALC <- select(ALC, -'Tipo Ingreso')
+ALC <- select(ALC, -'Rubro Ingreso')
+ALC <- select(ALC, -'Periodo')
+```
+
+```{r}
+#Creación de variable de verificación para reemplazo de N/A's 
+DF <- merge(DF, ALC, by = c("Año","Mes","Aeropuerto","Infraestructura"), all=TRUE)
+DF <- rename(DF, "ALC_VER" = "Importe por Servicios")
+```
+
+```{r}
+DF <- merge(DF, ALC, by = c("Año","Mes","Aeropuerto","Infraestructura"), all=TRUE)
+DF <- rename(DF, "ALC" = "Importe por Servicios")
+```
+
+```{r}
+#Reemplazo de N/A's por 0
+DF$ALC_VER[is.na(DF$ALC_VER)] <- 0
+DF$ALC_VER[DF$ALC_VER != 0] <- "Si"
+DF$ALC_VER[DF$ALC_VER == "0"] <- "No"
+DF$ALC[is.na(DF$ALC)] <- 0
+```
+
+## Uniendo la variable Ingreso Rubro ALQUILER OFICINAS OPERACIONES AEROLÍNEAS (AOOA)
+
+```{r}
+AOOA <- filter(IT, `Rubro Ingreso` == "ALQUILER OFICINAS OPERACIONES AEROLÍNEAS")
+AOOA <- filter(AOOA,Año %in% c(2020,2021,2022))
+AOOA <- select(AOOA, -'Tipo Ingreso')
+AOOA <- select(AOOA, -'Rubro Ingreso')
+AOOA <- select(AOOA, -'Periodo')
+```
+
+```{r}
+#Creación de variable de verificación para reemplazo de N/A's 
+DF <- merge(DF, AOOA, by = c("Año","Mes","Aeropuerto","Infraestructura"), all=TRUE)
+DF <- rename(DF, "AOOA_VER" = "Importe por Servicios")
+```
+
+```{r}
+DF <- merge(DF, AOOA, by = c("Año","Mes","Aeropuerto","Infraestructura"), all=TRUE)
+DF <- rename(DF, "AOOA" = "Importe por Servicios")
+```
+
+```{r}
+DF$AOOA_VER[is.na(DF$AOOA_VER)] <- 0
+DF$AOOA_VER[DF$AOOA_VER != 0] <- "Si"
+DF$AOOA_VER[DF$AOOA_VER == "0"] <- "No"
+DF$AOOA[is.na(DF$AOOA)] <- 0
+```
+
+## Uniendo la variable Ingreso Rubro ALQUILERES DE ALMACEN/HANGAR (ADAH)
+
+```{r}
+ADAH <- filter(IT, `Rubro Ingreso` == "ALQUILERES DE ALMACEN/HANGAR")
+ADAH <- filter(ADAH,Año %in% c(2020,2021,2022))
+ADAH <- select(ADAH, -'Tipo Ingreso')
+ADAH <- select(ADAH, -'Rubro Ingreso')
+ADAH <- select(ADAH, -'Periodo')
+```
+
+```{r}
+#Creación de variable de verificación para reemplazo de N/A's 
+DF <- merge(DF, ADAH, by = c("Año","Mes","Aeropuerto","Infraestructura"), all=TRUE)
+DF <- rename(DF, "ADAH_VER" = "Importe por Servicios")
+```
+
+```{r}
+DF <- merge(DF, ADAH, by = c("Año","Mes","Aeropuerto","Infraestructura"), all=TRUE)
+DF <- rename(DF, "ADAH" = "Importe por Servicios")
+```
+
+```{r}
+DF$ADAH_VER[is.na(DF$ADAH_VER)] <- 0
+DF$ADAH_VER[DF$ADAH_VER != 0] <- "Si"
+DF$ADAH_VER[DF$ADAH_VER == "0"] <- "No"
+DF$ADAH[is.na(DF$ADAH)] <- 0
+```
+
+## Uniendo la variable Ingreso Rubro ATENCIÓN EN HORAS EXTRAS (AEHE)
+
+```{r}
+AEHE <- filter(IT, `Rubro Ingreso` == "ATENCIÓN EN HORAS EXTRAS")
+AEHE <- filter(AEHE,Año %in% c(2020,2021,2022))
+AEHE <- select(AEHE, -'Tipo Ingreso')
+AEHE <- select(AEHE, -'Rubro Ingreso')
+AEHE <- select(AEHE, -'Periodo')
+```
+
+```{r}
+#Creación de variable de verificación para reemplazo de N/A's 
+DF <- merge(DF, AEHE, by = c("Año","Mes","Aeropuerto","Infraestructura"), all=TRUE)
+DF <- rename(DF, "AEHE_VER" = "Importe por Servicios")
+```
+
+```{r}
+DF <- merge(DF, AEHE, by = c("Año","Mes","Aeropuerto","Infraestructura"), all=TRUE)
+DF <- rename(DF, "AEHE" = "Importe por Servicios")
+```
+
+```{r}
+DF$AEHE_VER[is.na(DF$AEHE_VER)] <- 0
+DF$AEHE_VER[DF$AEHE_VER != 0] <- "Si"
+DF$AEHE_VER[DF$AEHE_VER == "0"] <- "No"
+DF$AEHE[is.na(DF$AEHE)] <- 0
+```
+
+## Uniendo la variable Ingreso Rubro ESTACIONAMIENTO AERONAVES (IREA)
+
+```{r}
+IREA <- filter(IT, `Rubro Ingreso` == "ESTACIONAMIENTO AERONAVES")
+IREA <- filter(IREA,Año %in% c(2020,2021,2022))
+IREA <- select(IREA, -'Tipo Ingreso')
+IREA <- select(IREA, -'Rubro Ingreso')
+IREA <- select(IREA, -'Periodo')
+```
+
+```{r}
+#Creación de variable de verificación para reemplazo de N/A's 
+DF <- merge(DF, IREA, by = c("Año","Mes","Aeropuerto","Infraestructura"), all=TRUE)
+DF <- rename(DF, "IREA_VER" = "Importe por Servicios")
+```
+
+```{r}
+DF <- merge(DF, IREA, by = c("Año","Mes","Aeropuerto","Infraestructura"), all=TRUE)
+DF <- rename(DF, "IREA" = "Importe por Servicios")
+```
+
+```{r}
+DF$IREA_VER[is.na(DF$IREA_VER)] <- 0
+DF$IREA_VER[DF$IREA_VER != 0] <- "Si"
+DF$IREA_VER[DF$IREA_VER == "0"] <- "No"
+DF$IREA[is.na(DF$IREA)] <- 0
+```
+
+## Uniendo la variable Ingreso Rubro INGRESOS FINANCIEROS (IRIF)
+
+```{r}
+IRIF <- filter(IT, `Rubro Ingreso` == "INGRESOS FINANCIEROS")
+IRIF <- filter(IRIF,Año %in% c(2020,2021,2022))
+IRIF <- select(IRIF, -'Tipo Ingreso')
+IRIF <- select(IRIF, -'Rubro Ingreso')
+IRIF <- select(IRIF, -'Periodo')
+```
+
+```{r}
+#Creación de variable de verificación para reemplazo de N/A's 
+DF <- merge(DF, IRIF, by = c("Año","Mes","Aeropuerto","Infraestructura"), all=TRUE)
+DF <- rename(DF, "IRIF_VER" = "Importe por Servicios")
+```
+
+```{r}
+DF <- merge(DF, IRIF, by = c("Año","Mes","Aeropuerto","Infraestructura"), all=TRUE)
+DF <- rename(DF, "IRIF" = "Importe por Servicios")
+```
+
+```{r}
+DF$IRIF_VER[is.na(DF$IRIF_VER)] <- 0
+DF$IRIF_VER[DF$IRIF_VER != 0] <- "Si"
+DF$IRIF_VER[DF$IRIF_VER == "0"] <- "No"
+DF$IRIF[is.na(DF$IRIF)] <- 0
+```
+
+## Uniendo la variable Ingreso Rubro REEMBOLSOS (IRR)
+
+```{r}
+IRR <- filter(IT, `Rubro Ingreso` == "REEMBOLSOS")
+IRR <- filter(IRR,Año %in% c(2020,2021,2022))
+IRR <- select(IRR, -'Tipo Ingreso')
+IRR <- select(IRR, -'Rubro Ingreso')
+IRR <- select(IRR, -'Periodo')
+```
+
+```{r}
+#Creación de variable de verificación para reemplazo de N/A's 
+DF <- merge(DF, IRR, by = c("Año","Mes","Aeropuerto","Infraestructura"), all=TRUE)
+DF <- rename(DF, "IRR_VER" = "Importe por Servicios")
+```
+
+```{r}
+DF <- merge(DF, IRR, by = c("Año","Mes","Aeropuerto","Infraestructura"), all=TRUE)
+DF <- rename(DF, "IRR" = "Importe por Servicios")
+```
+
+```{r}
+DF$IRR_VER[is.na(DF$IRR_VER)] <- 0
+DF$IRR_VER[DF$IRR_VER != 0] <- "Si"
+DF$IRR_VER[DF$IRR_VER == "0"] <- "No"
+DF$IRR[is.na(DF$IRR)] <- 0
+```
+
+>>>>>>> 8424e233bff1cf6c367d5041cf0f9f67ec222c73
 ## Eliminación de datos
 
 ```{r}
@@ -150,7 +453,13 @@ DF <- filter(DF, Infraestructura != is.na("Infraestructura") & Aeropuerto != is.
 ```
 
 ```{r}
+<<<<<<< HEAD
 
 
  
+=======
+table(IT$`Rubro Ingreso`)
+sum(complete.cases(DF))
+unique(DF$Infraestructura)
+>>>>>>> 8424e233bff1cf6c367d5041cf0f9f67ec222c73
 ```
