@@ -20,7 +20,7 @@ output:
 # **Alumnos del grupo:**
 
 | Alumno                          | **Código**    | **Correo**                     | **Porcentaje de Trabajo** |
-|-------------------|------------------|-------------------|------------------|
+|------------------|------------------|------------------|------------------|
 | ***Samir Stefano Suarez Rios*** | **202210611** | **samir.suarez\@utec.edu.pe**  | **x%**                    |
 | **Shaquira**                    | **201610002** | **María.salinas\@utec.edu.pe** | **x%**                    |
 | **Caballito Hurtado**           | **201610002** | **María.salinas\@utec.edu.pe** | **x%**                    |
@@ -54,7 +54,7 @@ rm(list=ls())
 ```{r}
 IT <- read_csv("RecaudacionIngresosTotales.csv")
 IR <- read_csv("RecaudacionIngresosRegulados.csv")
-TP <- read_csv("TraficoPasajeros.csv")
+Tp<- read_csv("TraficoPasajeros.csv")
 ```
 
 # Limpieza de datos
@@ -141,10 +141,16 @@ DF <- merge(DF, IRAD, by = c("Año","Mes","Aeropuerto","Infraestructura"), all=T
 DF <- rename(DF, "IRAD" = "Importe por Servicios")
 ```
 
-## Eliminación de datos 
+## Eliminación de datos
 
 ```{r}
 # Si es que no tenemos el nombre del aeropuerto o su infraestructura (Siempre debe venir acompañada del nombre), la unidad muestral no podrá entrar al análisis pues por ejemplo si nos dicen cuanto gano un aeropuerto desconocido, esto no nos dirá nada.
 
 DF <- filter(DF, Infraestructura != is.na("Infraestructura") & Aeropuerto != is.na("Aeropuerto"))
+```
+
+```{r}
+
+
+ 
 ```
