@@ -20,7 +20,7 @@ output:
 # **Alumnos del grupo:**
 
 | Alumno                          | **Código**    | **Correo**                     | **Porcentaje de Trabajo** |
-|------------------|------------------|------------------|------------------|
+|--------------------|----------------|--------------------|-----------------|
 | ***Samir Stefano Suarez Rios*** | **202210611** | **samir.suarez\@utec.edu.pe**  | **x%**                    |
 | **Milton Esteban Robles Reyes** | **202210416** | **milton.robles\@utec.edu.pe** | **x%**                    |
 | **Caballito Hurtado**           | **201610002** | **María.salinas\@utec.edu.pe** | **x%**                    |
@@ -62,10 +62,6 @@ TP <- read_csv("TraficoPasajeros.csv")
 # Limpieza de datos
 
 ## Creando el dataframe
-
-```{r}
-IT %>% mutate(Periodo = as.numeric(Periodo)) %>% full_join(IR, by = c("Año", "Mes","Periodo", "Infraestructura", "Aeropuerto", "Rubro Ingreso", "Importe por Servicios")) %>% full_join(TP, by = c("Año", "Mes","Periodo", "Infraestructura", "Aeropuerto")) ->DFN
-```
 
 ```{r}
 # MESES:
@@ -120,20 +116,7 @@ DF <- rename(DF, "NPI" = "Nro Pasajeros")
 ```
 
 ```{r}
-DF <- mutate(DF,Infraestructuras=case_when(Infraestructura == 'AAP' ~'Aeropuertos Andinos del Perú S.A.',Infraestructura == 'COR' ~'CORPAC S.A.',Infraestructura == 'ADP' ~'Aeropuertos del Perú S.A.',Infraestructura == 'LAP' ~'Lima Airport Partners S.R.L.'))
-DF <- select(DF, -Infraestructura)
-DF <- select(DF, -NPI)
-```
-
-```{r}
-DF <- merge(DF,PI, by = c("Año","Mes","Aeropuerto"), all = TRUE)
-DF <- rename(DF, "NPI" = "Nro Pasajeros")
-```
-
-```{r}
 #Reemplazo de N/A's por 0
-DF <- select(DF, -Infraestructura)
-DF <- rename(DF, Infraestructura = Infraestructuras)
 DF$NPI[is.na(DF$NPI)] <- 0
 ```
 
@@ -149,7 +132,6 @@ PN <- select(PN, -`Tipo de Pasajero`)
 ```{r}
 DF <- merge(DF,PN, by = c("Año","Mes","Aeropuerto","Infraestructura"), all=TRUE)
 DF <- rename(DF, "NPN" = "Nro Pasajeros")
-DF <- rename(DF, "Infraestructura" = "Infraestructura.x")
 ```
 
 ```{r}
@@ -421,6 +403,8 @@ IRR <- filter(IRR,Año %in% c(2020,2021,2022))
 IRR <- select(IRR, -'Tipo Ingreso')
 IRR <- select(IRR, -'Rubro Ingreso')
 IRR <- select(IRR, -'Periodo')
+
+IRR <- filter(IRR, `Importe por Servicios` != 0)
 ```
 
 ```{r}
@@ -441,6 +425,7 @@ DF$IRR_VER[DF$IRR_VER == "0"] <- "No"
 DF$IRR[is.na(DF$IRR)] <- 0
 ```
 
+
 ## Eliminación de datos
 
 ```{r}
@@ -449,8 +434,40 @@ DF$IRR[is.na(DF$IRR)] <- 0
 DF <- filter(DF, Infraestructura != is.na("Infraestructura") & Aeropuerto != is.na("Aeropuerto"))
 ```
 
+
+## Exportando la base de datos
+
 ```{r}
-table(IT$`Rubro Ingreso`)
+write_csv(DF,"BaseLimpia.csv")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+#table(IT$`Rubro Ingreso`)
 sum(complete.cases(DF))
-unique(DF$Infraestructura)
+#unique(DF$Infraestructura)
 ```
