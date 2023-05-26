@@ -20,7 +20,7 @@ output:
 # **Alumnos del grupo:**
 
 | Alumno                          | **Código**    | **Correo**                     | **Porcentaje de Trabajo** |
-|--------------------|----------------|--------------------|-----------------|
+|-------------------|------------------|-------------------|------------------|
 | ***Samir Stefano Suarez Rios*** | **202210611** | **samir.suarez\@utec.edu.pe**  | **x%**                    |
 | **Milton Esteban Robles Reyes** | **202210416** | **milton.robles\@utec.edu.pe** | **x%**                    |
 | **Caballito Hurtado**           | **201610002** | **María.salinas\@utec.edu.pe** | **x%**                    |
@@ -425,15 +425,28 @@ DF$IRR_VER[DF$IRR_VER == "0"] <- "No"
 DF$IRR[is.na(DF$IRR)] <- 0
 ```
 
-
 ## Eliminación de datos
 
 ```{r}
 # Si es que no tenemos el nombre del aeropuerto o su infraestructura (Siempre debe venir acompañada del nombre), la unidad muestral no podrá entrar al análisis pues por ejemplo si nos dicen cuanto gano un aeropuerto desconocido, esto no nos dirá nada.
 
 DF <- filter(DF, Infraestructura != is.na("Infraestructura") & Aeropuerto != is.na("Aeropuerto"))
+
+DF %>% mutate("Ingresos_Totales" =
+                  rowSums(DF[c(5,6,seq(8,26,by=2))])) -> DF
+
+
+
+DF %>% mutate("Entidad_Infraestructura" =
+                  ifelse(Infraestructura=="ADP", "Aeropuertos del Perú S.A.",
+                  ifelse(Infraestructura=="AAP", "Aeropuertos Andinos del Perú S.A.",
+                  ifelse(Infraestructura=="COR", "CORPAC S.A.",
+                  ifelse(Infraestructura=="LAP", "Lima Airport Partners S.R.L.",Infraestructura))))) -> DF
 ```
 
+```{r}
+sum(complete.cases(DF))
+```
 
 ## Exportando la base de datos
 
@@ -441,33 +454,77 @@ DF <- filter(DF, Infraestructura != is.na("Infraestructura") & Aeropuerto != is.
 write_csv(DF,"BaseLimpia.csv")
 ```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# Importando la base datos limpia
 
 ```{r}
-#table(IT$`Rubro Ingreso`)
-sum(complete.cases(DF))
-#unique(DF$Infraestructura)
+
+rm(list = ls())
+library(plyr)
+library(dplyr)
+library(plotrix)
+library(ggplot2)
+library(stringi)
+
+DF <- read_csv("BaseLimpia.csv")
+
 ```
+
+# Variables
+
+**Año:** Variable categórica que indica el año de la recolección de información.
+
+**Mes:** Variable categórica que indica el mes de la recolección de información.
+
+**Aeropuerto:** Variable cualitativa que indica el aeropuerto del cual se recolecta la información
+
+**Infraestructura:** Variable cualitativa que indica en acrónimo a que entidad pertenece la infraestructura del aeropuerto del cual se recolecta la información.
+
+**Entidad_Infraestructura:** Variable cualitativa que indica a que entidad pertenece la infraestructura del aeropuerto del cual se recolecta la información.
+
+**NPI:** Variable cuantitativa que representa el numero de pasajeros internacionales que ha registrado el aeropuerto
+
+**NPN:** Variable cuantitativa que representa el numero de pasajeros nacionales que ha registrado el aeropuerto
+
+**IRAD_VER:** Variable categórica que representa si el aeropuerto obtiene ingresos por aterrizaje y despegue.
+
+**IRAD:** Variable cuantitativa que representa el ingreso en dolares del aeropuerto por aterrizaje y despegue.
+
+**AADM_VER:** Variable categórica que representa si el aeropuerto obtiene ingresos por el alquiler de áreas de mantenimiento.
+
+**AADM:** Variable cuantitativa que representa el ingreso en dolares por el alquiler de áreas de mantenimiento.
+
+**ADEP_VER:** Variable categórica que representa si el aeropuerto obtiene ingresos por el alquiler de espacios de publicidad.
+
+**ADEP:** Variable cuantitativa que representa el ingreso en dolares por el alquiler de espacios de publicidad.
+
+**ALC_VER:** Variable categórica que representa si el aeropuerto obtiene ingresos por el alquiler de locales comerciales.
+
+**ALC:** Variable cuantitativa que representa el ingreso en dolares por el alquiler de locales comerciales.
+
+**AOOA_VER:** Variable categórica que representa si el aeropuerto obtiene ingresos por el alquiler de oficinas de operaciones de aerolíneas.
+
+**AOOA:** Variable cuantitativa que representa el ingreso en dolares por el alquiler de oficinas de operaciones de aerolíneas.
+
+**ADAH_VER:** Variable categórica que representa si el aeropuerto obtiene ingresos por el alquiler de almacenes/hangares.
+
+**ADAH:** Variable cuantitativa que representa el ingreso en dolares por el alquiler de almacenes/hangares.
+
+**AEHE_VER:** Variable categórica que representa si el aeropuerto obtiene ingresos por la atención en horas extras.
+
+**AEHE:** Variable cuantitativa que representa el ingreso en dolares por la atención en horas extras.
+
+**IREA_VER:** Variable categórica que representa si el aeropuerto obtiene ingresos por el estacionamiento de aeronaves.
+
+**IREA:** Variable cuantitativa que representa el ingreso en dolares por el estacionamiento de aeronaves.
+
+**IRIF_VER:** Variable categórica que representa si el aeropuerto obtiene ingresos por reembolso en ingresos financieros.
+
+**IRIF:** Variable cuantitativa que representa el ingreso en dolares por reembolso en ingresos financieros.
+
+**IRR_VER:** Variable categórica que representa si el aeropuerto obtiene ingresos por reembolsos.
+
+**IRR:** Variable cuantitativa que representa el ingreso en dolares por reembolsos.
+
+# Descriptores numéricos
+
+# Descriptores Gráficos
