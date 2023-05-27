@@ -20,7 +20,7 @@ output:
 # **Alumnos del grupo:**
 
 | Alumno                          | **Código**    | **Correo**                     | **Porcentaje de Trabajo** |
-|---------------------------------|---------------|--------------------------------|---------------------------|
+|--------------------|----------------|--------------------|-----------------|
 | ***Samir Stefano Suarez Rios*** | **202210611** | **samir.suarez\@utec.edu.pe**  | **x%**                    |
 | **Milton Esteban Robles Reyes** | **202210416** | **milton.robles\@utec.edu.pe** | **x%**                    |
 | **Caballito Hurtado**           | **201610002** | **María.salinas\@utec.edu.pe** | **x%**                    |
@@ -32,19 +32,19 @@ Análisis mensual de la relación entre número de pasajeros e ingresos totales 
 
 # **Objetivo**
 
-Evaluar la influencia del número de pasajeros en los ingresos totales (S/.) por mes y año en cada aeropuerto en el Perú.
+Evaluar la influencia del número de pasajeros en los ingresos totales (\$) por mes y año en cada aeropuerto en el Perú.
 
 ## Objetivo Secundarios
 
--   Comparar los ingresos totales (S/.) durante la pandemia y post pandemia en el Perú.
--   Comparar los ingresos totales (S/.) de los rubros ( ) en los aeropuertos del Perú.
+-   Comparar los ingresos totales (\$) durante la pandemia y post pandemia en el Perú.
+-   Comparar los ingresos totales (\$) de los rubros ( ) en los aeropuertos del Perú.
 -   Determinar la relación de los Check In y los despegues en los aeropuertos del Perú.
 
 ## Tabla de variables
 
 # Librerías
 
-```{r}
+```{r echo=FALSE}
 library(plyr)
 library(dplyr)
 library(readr)
@@ -53,7 +53,7 @@ rm(list=ls())
 
 # Tablas
 
-```{r}
+```{r echo=FALSE}
 ITS <- read_csv("RecaudacionIngresosTotales.csv")
 IRS<- read_csv("RecaudacionIngresosRegulados.csv")
 TP <- read_csv("TraficoPasajeros.csv")
@@ -111,22 +111,23 @@ DF <- merge(DF,DF2022, by = c("Año","Mes","Aeropuerto"), all = TRUE)
 ## Creando el DataFrame a partir de la variable Ingresos Totales (IT)
 
 ```{r eval=TRUE}
-ITS %>% group_by(Año,Mes,Aeropuerto) %>% summarise(IT = sum(`Importe por Servicios`, na.rm = T)) -> DF
+ITS <- filter(ITS, Año %in% c("2020","2021","2022"))
+ITS %>% group_by(Año,Mes,Aeropuerto,Infraestructura) %>% summarise(IT = sum(`Importe por Servicios`)) -> DF
 
 ```
 
-```{r eval=TRUE}
+```{r eval=FALSE}
 DF$IT[is.na(DF$IT)] <- 0
 ```
 
 ## Uniendo la variable Ingresos Regulados (IR)
 
 ```{r}
-IRS %>% group_by(Año,Mes,Aeropuerto) %>% summarise(IR = sum(`Importe por Servicios`, na.rm = T)) -> IRegulados
+IRS %>% group_by(Año,Mes,Aeropuerto) %>% summarise(IR = sum(`Importe por Servicios`)) -> IRegulados
 DF <- merge(DF, IRegulados, by = c("Año","Mes","Aeropuerto"), all=TRUE)
 ```
 
-```{r eval=TRUE}
+```{r eval=FALSE}
 DF$IR[is.na(DF$IR)] <- 0
 ```
 
@@ -140,7 +141,7 @@ PI <- select(PI, -`Tipo de Pasajero`)
 ```
 
 ```{r}
-DF <- merge(DF,PI, by = c("Año","Mes","Aeropuerto"), all = TRUE)
+DF <- merge(DF,PI, by = c("Año","Mes","Aeropuerto","Infraestructura"), all = TRUE)
 DF <- rename(DF, "NPI" = "Nro Pasajeros")
 ```
 
@@ -432,7 +433,7 @@ DF <- merge(DF, AEHE, by = c("Año","Mes","Aeropuerto","Infraestructura"), all=T
 DF <- rename(DF, "AEHE" = "Importe por Servicios")
 ```
 
-```{r = eval=TRUE}
+```{r eval=TRUE}
 DF$AEHE_VER[is.na(DF$AEHE_VER)] <- 0
 DF$AEHE_VER[DF$AEHE_VER != 0] <- "Si"
 DF$AEHE_VER[DF$AEHE_VER == "0"] <- "No"
@@ -533,8 +534,11 @@ DF$IRR[is.na(DF$IRR)] <- 0
 ```{r}
 # Si es que no tenemos el nombre del aeropuerto o su infraestructura (Siempre debe venir acompañada del nombre), la unidad muestral no podrá entrar al análisis pues por ejemplo si nos dicen cuanto gano un aeropuerto desconocido, esto no nos dirá nada.
 
-DF <- filter(DF, Infraestructura != is.na("Infraestructura") & Aeropuerto != is.na("Aeropuerto"))
 
+DF$Aeropuerto[DF$Aeropuerto == 'No precisa'] <- NA
+DF$Infraestructura[DF$Infraestructura == '-'] <- NA
+
+DF <- filter(DF, Infraestructura != is.na("Infraestructura") & Aeropuerto != is.na("Aeropuerto"))
 
 DF %>% mutate("Entidad_Infraestructura" =
                   ifelse(Infraestructura=="ADP", "Aeropuertos del Perú S.A.",
@@ -558,6 +562,7 @@ write_csv(DF,"BaseLimpiav2.csv")
 ```{r}
 
 rm(list = ls())
+library(readr)
 library(plyr)
 library(dplyr)
 library(plotrix)
@@ -627,6 +632,66 @@ DF <- read_csv("BaseLimpiav2.csv")
 
 # Descriptores Gráficos
 
+## Numero de Pasajeros vs Ingresos Totales
+
+```{r}
+DF %>% mutate(NP = NPN + NPI) -> DF
+#Numero de pasajeros totales
+```
+
+```{r}
+plot(DF$NP/1000, DF$IT/1000000, xlab = "Numero de pasajeros (miles)", ylab = "Ingresos totales (millones de US$)", col="darkgreen", pch="•")
+
+```
+
+Comenzamos comparando el numero de pasajeros en miles totales, suma de pasajeros internacionales y nacionales, con los ingresos totales de cada aeropuerto en determinado mes y año en millones de dolares. A simple vista se puede ver un cierto tipo de relación lineal, sin embargo tenemos que comprobarlo. Usaremos el coeficiente de correlación ya que este no toma en cuenta la escala de las unidades, perfecto para nuestro estudio.
+
+```{r}
+cor(DF$IT, DF$NP, use="complete.obs")
+```
+
+Con la información suministrada del coeficiente de correlación se deduce que la relación lineal entre el numero de pasajeros y los ingresos totales es bastante buena y ascendente. Es decir los ingresos totales aumentaran en cuanto aumente el numero de pasajeros.
+
+Ahora crearemos un modelo de regresión lineal.
+
+```{r}
+
+d <- data.frame("X"=DF$NP/1000, "Y"=DF$IT/1000000)
+modelo = lm(DF$IT ~ DF$NP, data=DF)
+modelo
+modelo = lm(d$Y ~ d$X, data=d)
+modelo
+```
+
+```{r}
+par(mfrow=c(1,2))
+
+plot(DF$NPN/1000, DF$IT/1000000, xlab = "Numero de pasajeros nacionales (miles)", ylab = "Ingresos totales (millones de US$)", col="red", pch="•")
+
+plot(DF$NPI/1000, DF$IT/1000000, xlab = "Numero de pasajeros internacionales (miles)", ylab = "Ingresos totales (millones de US$)", col="blue", pch="•")
+```
+
+```{r}
+boxplot(DF$IT/1000000, col="purple", horizontal = TRUE)
+```
+
+```{r}
+par(mfrow=c(1,2))
+boxplot(filter())
+```
+
+```{r}
+
+```
+
+```{r}
+plot(filter(DF,Aeropuerto == "Lima")$NPN/1000, filter(DF,Aeropuerto == "Lima")$IT/1000000, xlab = "Numero de miles de pasajeros nacionales", ylab = "Ingresos totales en millones de $")
+```
+
+```{r}
+plot(filter(DF,Aeropuerto != "Lima")$NPN/1000, filter(DF,Aeropuerto != "Lima")$IT/1000000, xlab = "Numero de miles de pasajeros nacionales", ylab = "Ingresos totales en millones de $")
+```
+
 ```{r}
 plot(DF$NPN/1000, DF$IT/1000000, xlab = "Numero de miles de pasajeros nacionales", ylab = "Ingresos totales en millones de $")
 ```
@@ -643,5 +708,5 @@ plot(group_by(DF, Mes)$NPI/1000, group_by(DF, Mes)$IT/100000, xlab = "Numero de 
 ```
 
 ```{r}
-par(mfrow=c(1,2))
+summary(DF$NPN[DF$IT <= 4000000])
 ```
