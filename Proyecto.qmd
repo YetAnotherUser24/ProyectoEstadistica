@@ -20,7 +20,7 @@ output:
 # **Alumnos del grupo:**
 
 | Alumno                          | **Código**    | **Correo**                     | **Porcentaje de Trabajo** |
-|--------------------|----------------|--------------------|-----------------|
+|-------------------|------------------|-------------------|------------------|
 | ***Samir Stefano Suarez Rios*** | **202210611** | **samir.suarez\@utec.edu.pe**  | **x%**                    |
 | **Milton Esteban Robles Reyes** | **202210416** | **milton.robles\@utec.edu.pe** | **x%**                    |
 | **Caballito Hurtado**           | **201610002** | **María.salinas\@utec.edu.pe** | **x%**                    |
@@ -36,9 +36,11 @@ Evaluar la influencia del número de pasajeros en los ingresos totales (\$) por 
 
 ## Objetivo Secundarios
 
+-   Determinar el aeropuerto con mayor afluencia de pasajeros y el de mayor ingresos del Perú.
+
+-   Comparar los ingresos totales (\$) de los rubros (T U U A Nacional, T U U A Internacional ) en los aeropuertos del Perú.
+
 -   Comparar los ingresos totales (\$) durante la pandemia y post pandemia en el Perú.
--   Comparar los ingresos totales (\$) de los rubros ( ) en los aeropuertos del Perú.
--   Determinar la relación de los Check In y los despegues en los aeropuertos del Perú.
 
 ## Tabla de variables
 
@@ -60,53 +62,6 @@ TP <- read_csv("TraficoPasajeros.csv")
 ```
 
 # Limpieza de datos
-
-## Creando el dataframe
-
-```{r echo=FALSE, eval=FALSE}
-# MESES:
-m <- c("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Setiembre","Octubre","Noviembre","Diciembre")
-
-
-# AEROPUERTOS:
-v <- c("Andahuaylas","Arequipa","Atalaya","Ayacucho","Cajamarca","Chachapoyas","Chiclayo","Chimbote","Cusco","Huánuco","Huaraz-Anta","Ilo","Iquitos","Jaén","Jauja","Juanjui","Juliaca","Lima","Mazamari","Moquegua","Nazca","Pisco","Piura","Pucallpa","Puerto Maldonado","Rioja","Rodríguez de Mendoza","Tacna","Talara","Tarapoto","Tingo","María","Tocache","Trujillo","Tumbes","Yurimaguas")
-
-
-# CREAMOS 3 DF CON LOS AÑOS (2020,2021,2022):
-DF2020 <- data.frame(rep(c(2020), length(v)*length(m)), rep(m,length(v)),rep(v,length(m)))
-
-DF2020 <- rename(DF2020, "Año"="rep.c.2020...length.v....length.m..", "Mes" = "rep.m..length.v..", "Aeropuerto"= "rep.v..length.m.." )
-DF2020$Aeropuerto <- sort(DF2020$Aeropuerto)
-arrange(DF2020, Aeropuerto)
-
-
-DF2021 <- data.frame(rep(c(2021), length(v)*length(m)), rep(m,length(v)),rep(v,length(m)))
-
-DF2021 <- rename(DF2021, "Año"="rep.c.2021...length.v....length.m..", "Mes" = "rep.m..length.v..", "Aeropuerto"= "rep.v..length.m.." )
-DF2021$Aeropuerto <- sort(DF2021$Aeropuerto)
-arrange(DF2021, Aeropuerto)
-
-
-DF2022 <- data.frame(rep(c(2022), length(v)*length(m)), rep(m,length(v)),rep(v,length(m)))
-
-DF2022 <- rename(DF2022, "Año"="rep.c.2022...length.v....length.m..", "Mes" = "rep.m..length.v..", "Aeropuerto"= "rep.v..length.m.." )
-DF2022$Aeropuerto <- sort(DF2022$Aeropuerto)
-arrange(DF2022, Aeropuerto)
-
-
-# COMBINAMOS LOS 3DF EN UN DF COMPLETO:
-DF <- merge(DF2020,DF2021, by = c("Año","Mes","Aeropuerto"), all = TRUE)
-DF <- merge(DF,DF2022, by = c("Año","Mes","Aeropuerto"), all = TRUE)
-
-```
-
-```{r}
-#table(ITS$"Rubro Ingreso")
-```
-
-```{r}
-#table(IR$`Rubro Ingreso`)
-```
 
 ## Creando el DataFrame a partir de la variable Ingresos Totales (IT)
 
@@ -529,13 +484,24 @@ DF$IRR_VER[DF$IRR_VER == "0"] <- "No"
 DF$IRR[is.na(DF$IRR)] <- 0
 ```
 
-## Eliminación de datos
+## Agregando la variable Numero de Pasajeros Totales (NP)
+
+```{r}
+DF %>% mutate(NP = NPN + NPI) -> DF
+#Numero de pasajeros totales
+```
+
+## Eliminación de datos y arreglos
 
 ```{r}
 # Si es que no tenemos el nombre del aeropuerto o su infraestructura (Siempre debe venir acompañada del nombre), la unidad muestral no podrá entrar al análisis pues por ejemplo si nos dicen cuanto gano un aeropuerto desconocido, esto no nos dirá nada.
 
 
+DF$Mes = factor(DF$Mes, levels =c("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Setiembre","Octubre","Noviembre","Diciembre"))
+DF <- arrange(DF, Año, Mes)
+
 DF$Aeropuerto[DF$Aeropuerto == 'No precisa'] <- NA
+DF$Aeropuerto[DF$Aeropuerto == '-'] <- NA
 DF$Infraestructura[DF$Infraestructura == '-'] <- NA
 
 DF <- filter(DF, Infraestructura != is.na("Infraestructura") & Aeropuerto != is.na("Aeropuerto"))
@@ -551,10 +517,17 @@ DF %>% mutate("Entidad_Infraestructura" =
 sum(complete.cases(DF))
 ```
 
+```{r}
+
+DF$Mes = factor(DF$Mes, levels =c("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Setiembre","Octubre","Noviembre","Diciembre"))
+DF <- arrange(DF, Año, Mes)
+```
+
 ## Exportando la base de datos
 
 ```{r}
 write_csv(DF,"BaseLimpiav2.csv")
+
 ```
 
 # Importando la base datos limpia
@@ -568,6 +541,7 @@ library(dplyr)
 library(plotrix)
 library(ggplot2)
 library(stringi)
+library(plotly)
 library(MASS)
 
 DF <- read_csv("BaseLimpiav2.csv")
@@ -585,6 +559,14 @@ DF <- read_csv("BaseLimpiav2.csv")
 **Infraestructura:** Variable cualitativa que indica en acrónimo a que entidad pertenece la infraestructura del aeropuerto del cual se recolecta la información.
 
 **Entidad_Infraestructura:** Variable cualitativa que indica a que entidad pertenece la infraestructura del aeropuerto del cual se recolecta la información.
+
+**IT:** Variable cuantitativa que representa los ingresos totales en dolares que ha registrado el aeropuerto
+
+**IR:** Variable cuantitativa que representa los ingresos regulados en dolares que ha registrado el aeropuerto
+
+**TUUAN**: Variable cuantitativa que representa el ingreso en dolares que ha generado la *TARIFA UNIFICADA POR USO DE AEROPUERTO de tipo nacional.*
+
+**TUUAN**: Variable cuantitativa que representa el ingreso en dolares que ha generado la *TARIFA UNIFICADA POR USO DE AEROPUERTO de tipo internacional.*
 
 **NPI:** Variable cuantitativa que representa el numero de pasajeros internacionales que ha registrado el aeropuerto
 
@@ -630,17 +612,70 @@ DF <- read_csv("BaseLimpiav2.csv")
 
 **IRR:** Variable cuantitativa que representa el ingreso en dolares por reembolsos.
 
+**NP:** Variable cuantitativa que representa el numero de pasajeros totales que ha registrado el aeropuerto.
+
+# Descriptores Numéricos
+
+```{r}
+cv <- function(x){
+    return(sd(x, na.rm=T)/mean(x, na.rm=T))
+}
+```
+
+```{r}
+tabla <- data.frame(Variables = c('IT', 'NPN', 'NPI', 'TUUAN','TUUAI'),
+                    Media = c(mean(DF$IT, na.rm=T), 
+                              mean(DF$NPN, na.rm = T), 
+                              mean(DF$NPI, na.rm= T),
+                              mean(DF$TUUAN, na.rm= T),
+                              mean(DF$TUUAI, na.rm= T)),
+                    
+                    Mediana = c(median(DF$IT, na.rm=T), 
+                                median(DF$NPN, na.rm = T), 
+                                median(DF$NPI, na.rm= T),
+                                median(DF$TUUAN, na.rm = T), 
+                                median(DF$TUUAI, na.rm= T)), 
+                    
+                    Desviacion = c(sd(DF$IT, na.rm=T), 
+                                   sd(DF$NPN, na.rm = T), 
+                                   sd(DF$NPI, na.rm= T), 
+                                   sd(DF$TUUAN, na.rm = T), 
+                                   sd(DF$TUUAI, na.rm= T)), 
+                    
+                    Varianza = c(var(DF$IT, na.rm = T), 
+                                 var(DF$NPN, na.rm = T), 
+                                 var(DF$NPI, na.rm = T), 
+                                 var(DF$TUUAN, na.rm = T), 
+                                 var(DF$TUUAI, na.rm = T)),
+                    
+                    RangoIntercuartil = c(IQR(DF$IT, na.rm = T), 
+                                        IQR(DF$NPN, na.rm = T), 
+                                        IQR(DF$NPI, na.rm = T), 
+                                        IQR(DF$TUUAN, na.rm = T), 
+                                        IQR(DF$TUUAI, na.rm = T)),
+                    
+                    CoeficienteVariacion = c(cv(DF$IT), 
+                                 cv(DF$NPN), 
+                                 cv(DF$NPI),
+                                 cv(DF$NPN), 
+                                 cv(DF$NPI)))
+tabla
+```
+
+De la tabla podemos conseguir la siguiente información:
+
+-   La escala con la que se trabaja es bastante grande, de ahí el hecho que la varianza y desviación sean tan grande.
+
+-   Tanto la varianza como la desviación nos indican que los datos de los Ingresos Totales, el Numero de Pasajeros Nacionales y el Numero de Pasajeros Internacionales están muy dispersos.
+
+-   Se aprecia un fenómeno que la mediana y el rango intercuartil de la variable Pasajeros internacionales es 0. Esto quiere decir que hay muchos aeropuertos los cuales no suelen recibir pasajeros internacionales.
+
 # Descriptores Gráficos
 
 ## Numero de Pasajeros vs Ingresos Totales
 
 ```{r}
-DF %>% mutate(NP = NPN + NPI) -> DF
-#Numero de pasajeros totales
-```
-
-```{r}
-plot(DF$NP/1000, DF$IT/1000000, xlab = "Numero de pasajeros (miles)", ylab = "Ingresos totales (millones de US$)", col="darkgreen", pch="•")
+plot(DF$NP/1000, DF$IT/1000000, xlab = "Numero de pasajeros (miles)", ylab = "Ingresos totales (millones de US$)", col="darkgreen", pch="•", xlim = c(0,2000))
 
 ```
 
@@ -650,18 +685,28 @@ Comenzamos comparando el numero de pasajeros en miles totales, suma de pasajeros
 cor(DF$IT, DF$NP, use="complete.obs")
 ```
 
-Con la información suministrada del coeficiente de correlación se deduce que la relación lineal entre el numero de pasajeros y los ingresos totales es bastante buena y ascendente. Es decir los ingresos totales aumentaran en cuanto aumente el numero de pasajeros.
+Con la información suministrada del coeficiente de correlación se deduce que la relación lineal entre el numero de pasajeros y los ingresos totales es buena, casi perfecta y ascendente. Es decir los ingresos totales aumentaran en cuanto aumente el numero de pasajeros.
 
 Ahora crearemos un modelo de regresión lineal.
 
 ```{r}
 
-d <- data.frame("X"=DF$NP/1000, "Y"=DF$IT/1000000)
 modelo = lm(DF$IT ~ DF$NP, data=DF)
 modelo
+
+d <- data.frame("X"=DF$NP/1000, "Y"=DF$IT/1000000)
 modelo = lm(d$Y ~ d$X, data=d)
 modelo
 ```
+
+Hemos creado dos modelos que en realidad son el mismo pero a diferentes escalas. El primero nos sirve para usar directamente el numero de pasajeros y los ingresos totales en dolares. El segundo para usar el numero de pasajeros en miles y conseguir los ingresos totales en millones de dolares. Ambos modelos nos permiten aproximar, predecir los ingresos totales de un aeropuerto en determinado mes y año usando la cantidad de pasajeros totales que llevo en el mismo lapso de tiempo.
+
+```{r}
+plot(DF$NP/1000, DF$IT/1000000, xlab = "Numero de pasajeros (miles)", ylab = "Ingresos totales (millones de US$)", col="darkgreen", pch="•", xlim = c(0,2000))
+abline(a= -0.14890, b=0.01646, col="green")
+```
+
+## Numero de Pasajeros Nacionales e Internacionales vs Ingresos Totales
 
 ```{r}
 par(mfrow=c(1,2))
@@ -671,42 +716,387 @@ plot(DF$NPN/1000, DF$IT/1000000, xlab = "Numero de pasajeros nacionales (miles)"
 plot(DF$NPI/1000, DF$IT/1000000, xlab = "Numero de pasajeros internacionales (miles)", ylab = "Ingresos totales (millones de US$)", col="blue", pch="•")
 ```
 
+Ahora vamos a analizar la relación de los tipos de pasajeros con los ingresos totales. De nuevo usaremos el coeficiente de correlación tanto para los pasajeros nacionales como internacionales.
+
 ```{r}
-boxplot(DF$IT/1000000, col="purple", horizontal = TRUE)
+cor(DF$IT, DF$NPN, use="complete.obs")
+cor(DF$IT, DF$NPI, use="complete.obs")
 ```
+
+De los coeficientes dados se encuentra que:
+
+-   Ambos demuestran que tanto los pasajeros nacionales como internacionales poseen una buena y ascendente relación lineal con los ingresos totales.
+-   Ambos son menores al **cor** de los pasajeros totales con los ingresos totales. Indica que si se usa solo a los pasajeros nacionales o solo a los internacionales para aproximar los ingresos totales, se tendrá una precisión menor a que si se usará la suma de ambos.
+-   El **cor** de los pasajeros internacionales es ligeramente superior al de los pasajeros nacionales, mostrando que su relación lineal con los ingresos totales es ligeramente más acorde que la relación lineal de los pasajeros nacionales.
+
+Ahora construyamos los modelos de regresión lineal para cada uno.
+
+```{r}
+
+modelo = lm(DF$IT ~ DF$NPN, data=DF)
+modelo
+
+d <- data.frame("X"=DF$NPN/1000, "Y"=DF$IT/1000000)
+modelo = lm(d$Y ~ d$X, data=d)
+modelo
+
+modelo = lm(DF$IT ~ DF$NPI, data=DF)
+modelo
+
+d <- data.frame("X"=DF$NPI/1000, "Y"=DF$IT/1000000)
+modelo = lm(d$Y ~ d$X, data=d)
+modelo
+
+rm(d)
+```
+
+Vemos que los modelos difieren en una cantidad considerable en cuanto a su pendiente, sin embargo, su intercepto es bastante similar, vamos a graficar estos modelos.
 
 ```{r}
 par(mfrow=c(1,2))
-boxplot(filter())
+
+plot(DF$NPN/1000, DF$IT/1000000, xlab = "Numero de pasajeros nacionales (miles)", ylab = "Ingresos totales (millones de US$)", col="red", pch="•")
+abline(a= -0.36033, b=0.02451, col="#f72585")
+
+plot(DF$NPI/1000, DF$IT/1000000, xlab = "Numero de pasajeros internacionales (miles)", ylab = "Ingresos totales (millones de US$)", col="blue", pch="•")
+abline(a= 0.31996, b=0.04772, col="#0077b6")
 ```
+
+## Analizando la distribución de Ingresos Totales
+
+```{r}
+plot_ly(x = ~DF$IT/1000000,
+        type="histogram",
+        color = ~DF$Infraestructura,
+        nbinsx = 100
+        )%>%
+layout(yaxis = list( title = "Frecuencia" ),
+    xaxis = list( title = "Ingresos totales (Millones de US$)",
+                  nticks = 20))
+```
+
+Gracias al histograma se dice que los datos de los ingresos totales son totalmente asimétricos y se encuentran acumulados en un intervalo de 0 - 0.5 millones de dolares. Es decir la mayoría de aeropuertos determinados en cierto mes y cierto año posee unos ingresos totales de entre 0 y 0.5 millones de dolares. Esto puede ocurrir debido a datos atípicos, construyamos un Boxplot para que nos ayude.
+
+```{r}
+plot_ly(DF, x=~DF$IT/1000000,
+            type = "box")%>%
+layout(
+    xaxis = list( title = "Ingresos totales (Millones de US$)"))
+```
+
+Usando un Boxplot simple se comprueba como los datos de los ingresos totales están demasidos dispersos gracias a cierta cantidad de datos atipicos. Ahora es necesario averiguar de donde provienen estos datos atípicos y que nos quieren decir. Para ello crearemos diferentes Boxplots basados en meses, infraestructuras y aeropuertos.
+
+```{r}
+plot_ly(DF, x = ~IT/1000000, 
+        y = ~Mes, 
+        color= ~Mes, 
+        type="box") %>%
+layout(yaxis = list( title = "Mes"),
+    xaxis = list( title = "Ingresos totales (Millones de US$)"))
+```
+
+Con este gráfico podemos descartar que los datos atípicos provengan de un o varios meses en específico.
+
+```{r}
+plot_ly(DF, x = ~IT/1000000, 
+        y = ~Infraestructura, 
+        color= ~Entidad_Infraestructura, 
+        type="box") %>%
+layout(yaxis = list( title = "Infraestructura"),
+    xaxis = list( title = "Ingresos totales (Millones de US$)"))
+```
+
+En este gráfico se observa como Lima Airport Partners S.R.L rebasa por mucho a las otras infraestructuras en cuanto a ingresos totales se refiere. Aquí podemos ya saber que esos datos atípicos de ingresos están generados en su gran mayoría por la infraestructura Lima Airport Partners S.R.L. Además es importante mencionar que la infraestructura COR no aparece en la gráfica pues no ha declarado ningún ingreso total.
+
+```{r}
+plot_ly(DF, x = ~IT/1000000, 
+        y = ~Aeropuerto, 
+        color= ~Aeropuerto, 
+        type="box"
+        ) %>%
+layout(yaxis = list( title = "Aeropuertos"),
+    xaxis = list( title = "Ingresos totales (Millones de US$)"))
+```
+
+Gracias a los 3 gráficos podemos concluir que:
+
+-   El aeropuerto de Lima cuya entidad prestadora es la LAP, es la responsable de los datos atípicos y además es el que más ingresos totales genera.
+-   La infraestructura LAP trabaja en Lima y se refiere al Aeropuerto Internacional Jorge Chávez. Esto nos quiere decir que en el Perú, el aeropuerto que genera más ingresos es el Jorge Chávez.
+
+## Numero de Pasajeros vs Aeropuertos
+
+```{r}
+plot_ly(DF,y = ~NP/1000,
+        x = ~as.factor(Aeropuerto), 
+        type="bar",
+        marker = list(color=c("lightblue"))
+        )%>%
+    layout(xaxis = list( title = "Aeropuertos"),
+    yaxis = list( title = "Numero de pasajeros (miles)"))
+```
+
+Con esta gráfico se corrobora que el Aeropuerto de Lima (Aeropuerto Internacional Jorge Chávez) genera la mayor cantidad de ingresos y además recibe a la mayor cantidad de pasajeros respecto al resto del Perú. Otros aeropuertos notables son Cusco, Arequipa e Iquitos donde Cusco es el que más pasajeros recibe fuera de Lima. Se procede a dibujar el numero de pasajeros, los ingresos totales y los aeropuertos.
+
+```{r}
+plot_ly(DF,x = ~NP/1000,
+        y = ~IT/1000000, 
+        type="scatter",
+        color = ~as.factor(Aeropuerto)
+        )
+```
+
+El gráfico nos deja en claro la estrecha relación de la cantidad de pasajeros con la de ingresos que posee el aeropuerto de Lima y como este sobresale por mucho del resto de aeropuertos. Se concluye que los datos atípicos provenientes de ingresos totales eran y nos contaban sobre las peculiaridades del caso Lima.
+
+## Ingresos T U U A Total vs Ingresos Totales
+
+Se eligió la comparación de las T U U A, porque esta es la TARIFA UNIFICADA POR USO DE AEROPUERTO, es decir es una tarifa que como consumidores debemos de pagar. El objetivo aquí es analizar cuanto de los ingresos totales provienen directamente de los bolsillos de los pasajeros.
+
+```{r}
+plot((DF$TUUAN/1000000 + DF$TUUAI/1000000), DF$IT/1000000, xlab = "Ingresos TUUA (millones de US$)", ylab = "Ingresos totales (millones de US$)", col="#926c15", pch="•")
+
+```
+
+Comenzamos comparando el numero de pasajeros en miles totales, suma de pasajeros internacionales y nacionales, con los ingresos totales de cada aeropuerto en determinado mes y año en millones de dolares. A simple vista se puede ver un cierto tipo de relación lineal, sin embargo tenemos que comprobarlo. Usaremos el coeficiente de correlación ya que este no toma en cuenta la escala de las unidades, perfecto para nuestro estudio.
+
+```{r}
+cor(DF$IT, DF$TUUAI + DF$TUUAN, use="complete.obs")
+```
+
+Tenemos un coeficiente de correlación que esta muy próximo a 1, es decir esta relación es casi perfectamente lineal y con tendencia ascendente.
+
+Ahora crearemos un modelo de regresión lineal.
+
+```{r}
+TUUA <- DF$TUUAI+DF$TUUAN
+modelo = lm(DF$IT ~ TUUA, data=DF)
+modelo
+
+d <- data.frame("X"= (DF$TUUAI + DF$TUUAN)/100000, "Y"=DF$IT/1000000)
+modelo = lm(d$Y ~ d$X, data=d)
+modelo
+
+rm(d)
+```
+
+Del modelo creado se obtiene el intercepto, es decir cuando la TUUA valdrá cero y la pendiente, en este caso es relativamente baja pero ascendente.
+
+```{r}
+plot(TUUA/100000, DF$IT/1000000, xlab = "Ingresos TUUA total (millones de US$)", ylab = "Ingresos totales (millones de US$)", col="#926c15", pch="•")
+abline(a= 0.1557, b=0.2190, col="#c9a227")
+```
+
+## Ingresos TUUA Nacional y TUUA Internacional vs Ingresos Totales
+
+```{r}
+par(mfrow=c(1,2))
+
+plot(DF$TUUAN/1000000, DF$IT/1000000, xlab = "Ingresos TUUA nacional (millones de US$)", ylab = "Ingresos totales (millones de US$)", col="#f8961e", pch="•")
+
+plot(DF$TUUAI/1000000, DF$IT/1000000, xlab = "Ingresos TUUA internacional (millones de US$)", ylab = "Ingresos totales (millones de US$)", col="#90be6d", pch="•")
+```
+
+Probemos de nuevo a usar el coeficiente de correlación para ambas variables
+
+```{r}
+cor(DF$IT, DF$TUUAN, use="complete.obs")
+cor(DF$IT, DF$TUUAI, use="complete.obs")
+```
+
+De los coeficientes dados se encuentra que:
+
+-   Los dos coeficientes muestran una casi perfecta linealidad ascendente.
+-   Ninguno de los dos **cor** por separado pudo superar al anterior visto producto de la suma de las TUUA.
+-   El **cor** nacional es ligeramente superior al **cor** internacional.
+
+Ahora construyamos los modelos de regresión lineal para cada uno.
 
 ```{r}
 
+modelo = lm(DF$IT ~ DF$TUUAN, data=DF)
+modelo
+
+d <- data.frame("X"=DF$TUUAN/1000000, "Y"=DF$IT/1000000)
+modelo = lm(d$Y ~ d$X, data=d)
+modelo
+
+modelo = lm(DF$IT ~ DF$TUUAI, data=DF)
+modelo
+
+d <- data.frame("X"=DF$TUUAI/1000000, "Y"=DF$IT/1000000)
+modelo = lm(d$Y ~ d$X, data=d)
+modelo
+
+rm(d)
+```
+
+Los modelos poseen bastantes diferencias entre sí como sus interceptos que a simple no tienen nada en común al igual que sus pendientes. Veamoslo en una grafica.
+
+```{r}
+par(mfrow=c(1,2))
+
+plot(DF$TUUAN/1000000, DF$IT/1000000, xlab = "Ingresos TUUA nacional (millones de US$)", ylab = "Ingresos totales (millones de US$)", col="#f8961e", pch="•")
+abline(a= -0.0599, b=5.2126, col="#f3722c")
+
+plot(DF$TUUAI/1000000, DF$IT/1000000, xlab = "Ingresos TUUA internacional (millones de US$)", ylab = "Ingresos totales (millones de US$)", col="#90be6d", pch="•")
+abline(a= 0.3295, b=3.6882, col="#43aa8b")
+
+```
+
+Detallamos entonces que los ingresos totales guardan una alta relación con los ingresos generados por las TUUA y dependen en gran medida de estas, ergo la cantidad de pasajeros.
+
+## Pandemia vs PostPandemia
+
+```{r}
+DF2020 <- filter(DF, DF$Año=="2020")
+DF2021 <- filter(DF, DF$Año=="2021")
+DF2022 <- filter(DF, DF$Año=="2022")
+
+DF2020 %>% group_by(Mes,Año) %>% summarise(IT = sum(IT, na.rm=TRUE), NP = sum(NP, na.rm = TRUE)) -> DF2020
+
+DF2021 %>% group_by(Mes,Año) %>% summarise(IT = sum(IT, na.rm=TRUE), NP = sum(NP, na.rm = TRUE)) -> DF2021
+                                           
+DF2022 %>% group_by(Mes,Año) %>% summarise(IT = sum(IT, na.rm=TRUE), NP = sum(NP, na.rm = TRUE)) -> DF2022
+
 ```
 
 ```{r}
-plot(filter(DF,Aeropuerto == "Lima")$NPN/1000, filter(DF,Aeropuerto == "Lima")$IT/1000000, xlab = "Numero de miles de pasajeros nacionales", ylab = "Ingresos totales en millones de $")
+plot_ly(y = ~DF2020$IT/1000000,
+        x = ~DF2020$Mes, 
+        type="bar",
+        name="2020",
+        marker = list(color = '#57cc99')
+        )%>% 
+
+    
+    add_trace(y = ~DF2021$IT/1000000,
+        x = ~DF2021$Mes, 
+        type="bar",
+        name="2021",
+        marker = list(color = '#38a3a5')
+        )%>%
+    
+    
+    add_trace(y = ~DF2022$IT/1000000,
+        x = ~DF2022$Mes, 
+        type="bar",
+        name="2022",
+        marker = list(color = '#22577a')
+        )%>%
+    
+    
+    layout(xaxis = list( title = "Meses"),
+    yaxis = list( title = "Ingresos totales (Millones de US$)",
+    nticks = 10,
+    range = list(0,45)),
+    
+    barmode="group")
+```
+
+Del gráfico de barras podemos observar:
+
+-   La distribución de los ingresos totales en base a los meses del año.
+
+-   Existe una asimetria notable entre los datos en el año 2020. Esta asimetria se explica por el surgimiento del Covid-19. Los ingresos bajaron bastante en proporción a la media.
+
+-   Un patrón de crecimiento sobre los ingresos totales dependiendo de los meses. En algunos meses los ingresos totales son esperado a ser mayores que en otros meses, uno de los factores que pueden influir en esto son las vacaciones pues están estrechamente relacionas con el número de pasajeros a abordarr en un aeropuerto.
+
+```{r}
+
+plot_ly() %>%
+    add_trace(y = ~DF2020$IT/1000000,
+        x = ~DF2020$Mes, 
+        type="scatter",
+        mode="lines+markers",
+        name="2020",
+        marker = list(color = '#57cc99'),
+        line = list(color = '#57cc99'),
+        fill = "tonexty",
+        fillcolor = 'rgba(197,237,211,0.3)'
+        )%>%
+    add_trace(DF2021, y = ~DF2021$IT/1000000,
+        x = ~DF2021$Mes, 
+        type="scatter",
+        mode="lines+markers",
+        name="2021",
+        marker = list(color = '#38a3a5'),
+        line = list(color = '#38a3a5'),
+        fill = "tonexty",
+        fillcolor = 'rgba(106,166,169,0.3)'
+        )%>%
+    add_trace(y = ~DF2022$IT/1000000,
+        x = ~DF2022$Mes, 
+        type="scatter",
+        mode="lines+markers",
+        name="2022",
+        marker = list(color = '#22577a'),
+        line = list(color = '#22577a'),
+        fill = "tonexty",
+        fillcolor = 'rgba(68,102,122,0.3)'
+        )%>%
+    
+    layout(xaxis = list( title = "Meses"),
+           title = "Evolutivo Ingresos",
+    yaxis = list( title = "Ingresos totales (Millones de US$)", 
+                  range = list(0,45))
+    )
+
 ```
 
 ```{r}
-plot(filter(DF,Aeropuerto != "Lima")$NPN/1000, filter(DF,Aeropuerto != "Lima")$IT/1000000, xlab = "Numero de miles de pasajeros nacionales", ylab = "Ingresos totales en millones de $")
+plot_ly() %>%
+    add_trace(y = ~DF2020$NP/1000,
+        x = ~DF2020$Mes, 
+        type="scatter",
+        mode="lines+markers",
+        name="2020",
+        marker = list(color = '#E09F3E'),
+        line = list(color = '#E09F3E'),
+        fill = "tonexty",
+        fillcolor = 'rgba(225,183,123,0.3)'
+        )%>%
+    add_trace(DF2021, y = ~DF2021$NP/1000,
+        x = ~DF2021$Mes, 
+        type="scatter",
+        mode="lines+markers",
+        name="2021",
+        marker = list(color = '#9E2A2B'),
+        line = list(color = '#9E2A2B'),
+        fill = "tonexty",
+        fillcolor = 'rgba(158,72,74,0.3)'
+        )%>%
+    add_trace(y = ~DF2022$NP/1000,
+        x = ~DF2022$Mes, 
+        type="scatter",
+        mode="lines+markers",
+        name="2022",
+        marker = list(color = '#540B0E'),
+        line = list(color = '#540B0E'),
+        fill = "tonexty",
+        fillcolor = 'rgba(87,45,47,0.3)'
+        )%>%
+    
+    layout(xaxis = list( title = "Meses"),
+           title = "Evolutivo Pasajeros",
+    yaxis = list( title = "Numero de Pasajeros (Miles)"))
 ```
 
-```{r}
-plot(DF$NPN/1000, DF$IT/1000000, xlab = "Numero de miles de pasajeros nacionales", ylab = "Ingresos totales en millones de $")
-```
+De los gráficos evolutivos podemos apreciar:
 
-```{r}
+-   Como es el comportamiento de los ingresos totales frente a los meses y a los años marcados por la pandemia.
 
-plot(DF$NPI, DF$IT, xlab = "Numero de pasajeros internacionales", ylab = "Ingresos totales")
+-   En el mes de Febrero del año 2020 comienza una caída drástica en los ingresos hasta Abril del mismo año donde comienza a estabilizarse. Este periodo coincide con la aparición del Covid-19 en Perú y el establecimiento de las medidas de confinamiento. El confinamiento indica que el número de pasajeros se reduce en gran proporción. Esta causa también se puede observar en el evolutivo de pasajeros y el como su número de cae hasta 0 o casi 0. Los aeropuerto tuvieron consecuencias que tardaron mucho en disiparse Muestra de ello es como se tardó 2 años y 5 meses para volver a un punto similar al de Febrero 2020 en ingresos totales.
 
-```
+    ```{r}
 
-```{r}
+    round(100 - ((filter(DF2020, Mes == "Abril")$IT/1000000 )/( filter(DF2020, Mes == "Febrero")$IT/1000000) * 100) ,2)
 
-plot(group_by(DF, Mes)$NPI/1000, group_by(DF, Mes)$IT/100000, xlab = "Numero de pasajeros internacionales", ylab = "Ingresos totales")
-```
+    round( - filter(DF2020, Mes == "Abril")$IT/1000000  + filter(DF2020,Mes == "Febrero")$IT/1000000, 2)
+    ```
 
-```{r}
-summary(DF$NPN[DF$IT <= 4000000])
-```
+-   La pérdida del mes de Abril del 2020 respecto al mes de Febrero del 2020 fue del 86.68% suponiendo una diferencia de 31.76 millones de dolares.
+
+-   A partir del mes de Abril se estabilizan los ingresos del año 2020. Estos son bajos pero se observa una tendencia ascendente. Tendencia que continua en los años 2021 y 2022 a medida que el confinamiento se levanta, la pandemia se controla y el numero de pasajeros aumenta.
+
+## Conclusión
+
+A razón de resumen, en nuestro análisis sobre la relación entre el número de pasajeros y los ingresos totales de los aeropuertos graficamos la distribución de los ingresos totales, las diferentes relaciones entre variables tales como la última vista (Ingresos TUUA vs Ingresos Totales), (cantidad de pasajeros y aeropuertos). Asimismo observamos y describimos el comportamiento evolutivo de los ingresos totales respecto a los años vividos en pandemia y post-pandemia. Finalemnte, con la información recolectada y el estudio realizado se encontró que los ingresos totales generados por los aeropuertos en el Perú dependente altamente en los consumidores o pasajeros, siendo la TUUA el ejemplo más claro de ello.
