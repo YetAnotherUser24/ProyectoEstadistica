@@ -20,7 +20,7 @@ output:
 # **Alumnos del grupo:**
 
 | Alumno                          | **Código**    | **Correo**                     | **Porcentaje de Trabajo** |
-|-------------------|------------------|-------------------|------------------|
+|---------------------------------|---------------|--------------------------------|---------------------------|
 | ***Samir Stefano Suarez Rios*** | **202210611** | **samir.suarez\@utec.edu.pe**  | **x%**                    |
 | **Milton Esteban Robles Reyes** | **202210416** | **milton.robles\@utec.edu.pe** | **x%**                    |
 | **Caballito Hurtado**           | **201610002** | **María.salinas\@utec.edu.pe** | **x%**                    |
