@@ -538,14 +538,11 @@ rm(list = ls())
 library(readr)
 library(plyr)
 library(dplyr)
-library(plotrix)
-library(ggplot2)
-library(stringi)
 library(plotly)
-library(MASS)
+library(tidyr)
 
 DF <- read_csv("BaseLimpiav2.csv")
-
+DF <- drop_na(DF)
 ```
 
 # Variables
