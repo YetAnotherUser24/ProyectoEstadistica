@@ -9,32 +9,43 @@ output:
     toc: yes
     toc_float:
       collapsed: no
-      smooth_scroll: no
-    number_sections: yes
+      smooth_scroll: yes
+    number_sections: no
+    toc_depth: 2
 
   html_document:
     toc: yes
     df_print: paged
 ---
 
-# **Alumnos del grupo:**
+**Alumnos del grupo:**
 
 | Alumno                          | **Código**    | **Correo**                     | **Porcentaje de Trabajo** |
-|-------------------|------------------|-------------------|------------------|
+|------------------|------------------|------------------|------------------|
 | ***Samir Stefano Suarez Rios*** | **202210611** | **samir.suarez\@utec.edu.pe**  | **x%**                    |
 | **Milton Esteban Robles Reyes** | **202210416** | **milton.robles\@utec.edu.pe** | **x%**                    |
 | **Caballito Hurtado**           | **201610002** | **María.salinas\@utec.edu.pe** | **x%**                    |
 | **Chriss Martin de Coldplay**   | **201610002** | **María.salinas\@utec.edu.pe** | **x%**                    |
 
-# **Tema**
+# **Introducción**
 
-Análisis mensual de la relación entre número de pasajeros e ingresos totales por aeropuerto (2020-2022)
+## Tema
 
-# **Objetivo**
+Análisis mensual de la relación entre número de pasajeros e ingresos totales por aeropuerto del Perú (2020-2022).
 
-Evaluar la influencia del número de pasajeros en los ingresos totales (\$) por mes y año en cada aeropuerto en el Perú.
+## Relevancia
 
-## Objetivo Secundarios
+La relevancia de nuestro proyecto se centra en varios aspectos, el mas básico de ellos es el transporte aéreo, que durante mucho tiempo de evolución, ha significado una oportunidad de conexión global, junto a ello, desarrollo económico y social. La delimitación temporal nos permite analizar el impacto crucial de la pandemia de COVID-19, desencadenada en 2020. Al examinar la relación entre el número de pasajeros y los ingresos en diversos rubros, nuestro proyecto ofrece un análisis integral de la salud financiera y rentabilidad de cada aeropuerto estudiado. Además, al considerar la influencia de la pandemia, exploraremos posibles declives o reactivaciones durante el periodo 2020-2022. Esto adquiere gran importancia en el contexto económico del Perú, ya que el turismo es un sector que además de estar muy ligado al transporte aéreo, aporta significativamente a la economía nacional. Nuestro proyecto proporcionará información valiosa para la toma de decisiones en este ámbito.
+
+## Objetivos
+
+### Objetivo principal
+
+-   Evaluar los factores que tengan mayor influencia en los ingresos totales (\$) por mes y año en cada aeropuerto en el Perú del año 2020 al 2022.
+
+### Objetivo Secundarios
+
+- Determinar la influencia del flujo de pasajeros en los ingresos totales (\$) por mes y año en cada aeropuerto en el Perú.
 
 -   Determinar el aeropuerto con mayor afluencia de pasajeros y el de mayor ingresos del Perú.
 
@@ -42,9 +53,77 @@ Evaluar la influencia del número de pasajeros en los ingresos totales (\$) por 
 
 -   Comparar los ingresos totales (\$) durante la pandemia y post pandemia en el Perú.
 
+# **Datos**
+
 ## Tabla de variables
 
-# Librerías
+Año: Variable categórica que indica el año de la recolección de información.
+
+Mes: Variable categórica que indica el mes de la recolección de información.
+
+Aeropuerto: Variable cualitativa que indica el aeropuerto del cual se recolecta la información
+
+Infraestructura: Variable cualitativa que indica en acrónimo a que entidad pertenece la infraestructura del aeropuerto del cual se recolecta la información.
+
+Entidad_Infraestructura: Variable cualitativa que indica a que entidad pertenece la infraestructura del aeropuerto del cual se recolecta la información.
+
+IT: Variable cuantitativa que representa los ingresos totales en dolares que ha registrado el aeropuerto
+
+IR: Variable cuantitativa que representa los ingresos regulados en dolares que ha registrado el aeropuerto
+
+TUUAN: Variable cuantitativa que representa el ingreso en dolares que ha generado la TARIFA UNIFICADA POR USO DE AEROPUERTO de tipo nacional.
+
+TUUAN: Variable cuantitativa que representa el ingreso en dolares que ha generado la TARIFA UNIFICADA POR USO DE AEROPUERTO de tipo internacional.
+
+NPI: Variable cuantitativa que representa el numero de pasajeros internacionales que ha registrado el aeropuerto
+
+NPN: Variable cuantitativa que representa el numero de pasajeros nacionales que ha registrado el aeropuerto
+
+IRAD_VER: Variable categórica que representa si el aeropuerto obtiene ingresos por aterrizaje y despegue.
+
+IRAD: Variable cuantitativa que representa el ingreso en dolares del aeropuerto por aterrizaje y despegue.
+
+AADM_VER: Variable categórica que representa si el aeropuerto obtiene ingresos por el alquiler de áreas de mantenimiento.
+
+AADM: Variable cuantitativa que representa el ingreso en dolares por el alquiler de áreas de mantenimiento.
+
+ADEP_VER: Variable categórica que representa si el aeropuerto obtiene ingresos por el alquiler de espacios de publicidad.
+
+ADEP: Variable cuantitativa que representa el ingreso en dolares por el alquiler de espacios de publicidad.
+
+ALC_VER: Variable categórica que representa si el aeropuerto obtiene ingresos por el alquiler de locales comerciales.
+
+ALC: Variable cuantitativa que representa el ingreso en dolares por el alquiler de locales comerciales.
+
+AOOA_VER: Variable categórica que representa si el aeropuerto obtiene ingresos por el alquiler de oficinas de operaciones de aerolíneas.
+
+AOOA: Variable cuantitativa que representa el ingreso en dolares por el alquiler de oficinas de operaciones de aerolíneas.
+
+ADAH_VER: Variable categórica que representa si el aeropuerto obtiene ingresos por el alquiler de almacenes/hangares.
+
+ADAH: Variable cuantitativa que representa el ingreso en dolares por el alquiler de almacenes/hangares.
+
+AEHE_VER: Variable categórica que representa si el aeropuerto obtiene ingresos por la atención en horas extras.
+
+AEHE: Variable cuantitativa que representa el ingreso en dolares por la atención en horas extras.
+
+IREA_VER: Variable categórica que representa si el aeropuerto obtiene ingresos por el estacionamiento de aeronaves.
+
+IREA: Variable cuantitativa que representa el ingreso en dolares por el estacionamiento de aeronaves.
+
+IRIF_VER: Variable categórica que representa si el aeropuerto obtiene ingresos por reembolso en ingresos financieros.
+
+IRIF: Variable cuantitativa que representa el ingreso en dolares por reembolso en ingresos financieros.
+
+IRR_VER: Variable categórica que representa si el aeropuerto obtiene ingresos por reembolsos.
+
+IRR: Variable cuantitativa que representa el ingreso en dolares por reembolsos.
+
+NP: Variable cuantitativa que representa el numero de pasajeros totales que ha registrado el aeropuerto.
+
+## Limpieza de base de datos
+
+### Librerías
 
 ```{r echo=FALSE}
 library(plyr)
@@ -53,7 +132,7 @@ library(readr)
 rm(list=ls())
 ```
 
-# Tablas
+### Tablas
 
 ```{r echo=FALSE}
 ITS <- read_csv("RecaudacionIngresosTotales.csv")
@@ -61,9 +140,7 @@ IRS<- read_csv("RecaudacionIngresosRegulados.csv")
 TP <- read_csv("TraficoPasajeros.csv")
 ```
 
-# Limpieza de datos
-
-## Creando el DataFrame a partir de la variable Ingresos Totales (IT)
+### Creando el DataFrame a partir de la variable Ingresos Totales (IT)
 
 ```{r eval=TRUE}
 ITS <- filter(ITS, Año %in% c("2020","2021","2022"))
@@ -75,7 +152,7 @@ ITS %>% group_by(Año,Mes,Aeropuerto,Infraestructura) %>% summarise(IT = sum(`Im
 DF$IT[is.na(DF$IT)] <- 0
 ```
 
-## Uniendo la variable Ingresos Regulados (IR)
+### Uniendo la variable Ingresos Regulados (IR)
 
 ```{r}
 IRS %>% group_by(Año,Mes,Aeropuerto) %>% summarise(IR = sum(`Importe por Servicios`)) -> IRegulados
@@ -86,7 +163,7 @@ DF <- merge(DF, IRegulados, by = c("Año","Mes","Aeropuerto"), all=TRUE)
 DF$IR[is.na(DF$IR)] <- 0
 ```
 
-## Uniendo la variable Numero de Pasajeros Internacionales (NPI)
+### Uniendo la variable Numero de Pasajeros Internacionales (NPI)
 
 ```{r}
 PI <- filter(TP, `Tipo de Pasajero` == "INTERNACIONAL")
@@ -106,7 +183,7 @@ DF$NPI[is.na(DF$NPI)] <- 0
 #Reemplazo de N/A's por 0
 ```
 
-## Uniendo la variable Numero de Pasajeros Nacionales (NPN)
+### Uniendo la variable Numero de Pasajeros Nacionales (NPN)
 
 ```{r}
 PN <- filter(TP, `Tipo de Pasajero` == "NACIONAL")
@@ -126,7 +203,7 @@ DF$NPN[is.na(DF$NPN)] <- 0
 #Reemplazo de N/A's por 0
 ```
 
-## Uniendo la variable Ingreso Rubro T U U A NACIONAL (TUUAN)
+### Uniendo la variable Ingreso Rubro T U U A NACIONAL (TUUAN)
 
 ```{r}
 TUUAN <- filter(ITS, `Rubro Ingreso` == "T U U A NACIONAL")
@@ -155,7 +232,7 @@ DF$TUUAN[is.na(DF$TUUAN)] <- 0
 #Reemplazo de N/A's por 0
 ```
 
-## Uniendo la variable Ingreso Rubro T U U A INTERNACIONAL (TUUAI)
+### Uniendo la variable Ingreso Rubro T U U A INTERNACIONAL (TUUAI)
 
 ```{r}
 TUUAI <- filter(ITS, `Rubro Ingreso` == "T U U A INTERNACIONAL")
@@ -184,7 +261,7 @@ DF$TUUAI[is.na(DF$TUUAI)] <- 0
 #Reemplazo de N/A's por 0
 ```
 
-## Uniendo la variable Ingreso Rubro ATERRIZAJE Y DESPEGUE (IRAD)
+### Uniendo la variable Ingreso Rubro ATERRIZAJE Y DESPEGUE (IRAD)
 
 ```{r}
 IRAD <- filter(ITS, `Rubro Ingreso` == "ATERRIZAJE Y DESPEGUE")
@@ -215,7 +292,7 @@ DF$IRAD[is.na(DF$IRAD)] <- 0
 #Reemplazo de N/A's por 0
 ```
 
-## Uniendo la variable Ingreso Rubro ALQUILER AREAS DE MANTENIMIENTO (AADM)
+### Uniendo la variable Ingreso Rubro ALQUILER AREAS DE MANTENIMIENTO (AADM)
 
 ```{r}
 AADM <- filter(ITS, `Rubro Ingreso` == "ALQUILER AREAS DE MANTENIMIENTO")
@@ -246,7 +323,7 @@ DF$AADM[is.na(DF$AADM)] <- 0
 #Reemplazo de N/A's por 0
 ```
 
-## Uniendo la variable Ingreso ALQUILER DE ESPACIOS PUBLICITSARIOS (ADEP)
+### Uniendo la variable Ingreso ALQUILER DE ESPACIOS PUBLICITARIOS (ADEP)
 
 ```{r}
 ADEP <- filter(ITS, `Rubro Ingreso` == "ALQUILER DE ESPACIOS PUBLICITSARIOS")
@@ -277,7 +354,7 @@ DF$ADEP[is.na(DF$ADEP)] <- 0
 #Reemplazo de N/A's por 0
 ```
 
-## Uniendo la variable Ingreso ALQUILER LOCALES COMERCIALES (ALC)
+### Uniendo la variable Ingreso ALQUILER LOCALES COMERCIALES (ALC)
 
 ```{r}
 ALC <- filter(ITS, `Rubro Ingreso` == "ALQUILER LOCALES COMERCIALES")
@@ -308,7 +385,7 @@ DF$ALC[is.na(DF$ALC)] <- 0
 #Reemplazo de N/A's por 0
 ```
 
-## Uniendo la variable Ingreso Rubro ALQUILER OFICINAS OPERACIONES AEROLÍNEAS (AOOA)
+### Uniendo la variable Ingreso Rubro ALQUILER OFICINAS OPERACIONES AEROLÍNEAS (AOOA)
 
 ```{r}
 AOOA <- filter(ITS, `Rubro Ingreso` == "ALQUILER OFICINAS OPERACIONES AEROLÍNEAS")
@@ -337,7 +414,7 @@ DF$AOOA_VER[DF$AOOA_VER == "0"] <- "No"
 DF$AOOA[is.na(DF$AOOA)] <- 0
 ```
 
-## Uniendo la variable Ingreso Rubro ALQUILERES DE ALMACEN/HANGAR (ADAH)
+### Uniendo la variable Ingreso Rubro ALQUILERES DE ALMACEN/HANGAR (ADAH)
 
 ```{r}
 ADAH <- filter(ITS, `Rubro Ingreso` == "ALQUILERES DE ALMACEN/HANGAR")
@@ -366,7 +443,7 @@ DF$ADAH_VER[DF$ADAH_VER == "0"] <- "No"
 DF$ADAH[is.na(DF$ADAH)] <- 0
 ```
 
-## Uniendo la variable Ingreso Rubro ATENCIÓN EN HORAS EXTRAS (AEHE)
+### Uniendo la variable Ingreso Rubro ATENCIÓN EN HORAS EXTRAS (AEHE)
 
 ```{r}
 AEHE <- filter(ITS, `Rubro Ingreso` == "ATENCIÓN EN HORAS EXTRAS")
@@ -395,7 +472,7 @@ DF$AEHE_VER[DF$AEHE_VER == "0"] <- "No"
 DF$AEHE[is.na(DF$AEHE)] <- 0
 ```
 
-## Uniendo la variable Ingreso Rubro ESTACIONAMIENTO AERONAVES (IREA)
+### Uniendo la variable Ingreso Rubro ESTACIONAMIENTO AERONAVES (IREA)
 
 ```{r}
 IREA <- filter(ITS, `Rubro Ingreso` == "ESTACIONAMIENTO AERONAVES")
@@ -424,7 +501,7 @@ DF$IREA_VER[DF$IREA_VER == "0"] <- "No"
 DF$IREA[is.na(DF$IREA)] <- 0
 ```
 
-## Uniendo la variable Ingreso Rubro INGRESOS FINANCIEROS (IRIF)
+### Uniendo la variable Ingreso Rubro INGRESOS FINANCIEROS (IRIF)
 
 ```{r}
 IRIF <- filter(ITS, `Rubro Ingreso` == "INGRESOS FINANCIEROS")
@@ -453,7 +530,7 @@ DF$IRIF_VER[DF$IRIF_VER == "0"] <- "No"
 DF$IRIF[is.na(DF$IRIF)] <- 0
 ```
 
-## Uniendo la variable Ingreso Rubro REEMBOLSOS (IRR)
+### Uniendo la variable Ingreso Rubro REEMBOLSOS (IRR)
 
 ```{r}
 IRR <- filter(ITS, `Rubro Ingreso` == "REEMBOLSOS")
@@ -484,14 +561,14 @@ DF$IRR_VER[DF$IRR_VER == "0"] <- "No"
 DF$IRR[is.na(DF$IRR)] <- 0
 ```
 
-## Agregando la variable Numero de Pasajeros Totales (NP)
+### Agregando la variable Numero de Pasajeros Totales (NP)
 
 ```{r}
 DF %>% mutate(NP = NPN + NPI) -> DF
 #Numero de pasajeros totales
 ```
 
-## Eliminación de datos y arreglos
+### Eliminación de datos y arreglos
 
 ```{r}
 # Si es que no tenemos el nombre del aeropuerto o su infraestructura (Siempre debe venir acompañada del nombre), la unidad muestral no podrá entrar al análisis pues por ejemplo si nos dicen cuanto gano un aeropuerto desconocido, esto no nos dirá nada.
@@ -523,14 +600,16 @@ DF$Mes = factor(DF$Mes, levels =c("Enero","Febrero","Marzo","Abril","Mayo","Juni
 DF <- arrange(DF, Año, Mes)
 ```
 
-## Exportando la base de datos
+### Exportando la base de datos
 
 ```{r}
 write_csv(DF,"BaseLimpiav2.csv")
 
 ```
 
-# Importando la base datos limpia
+# **Análisis descriptivo**
+
+### Importando la base datos limpia
 
 ```{r}
 
@@ -548,73 +627,7 @@ DF <- read_csv("BaseLimpiav2.csv")
 
 ```
 
-# Variables
-
-**Año:** Variable categórica que indica el año de la recolección de información.
-
-**Mes:** Variable categórica que indica el mes de la recolección de información.
-
-**Aeropuerto:** Variable cualitativa que indica el aeropuerto del cual se recolecta la información
-
-**Infraestructura:** Variable cualitativa que indica en acrónimo a que entidad pertenece la infraestructura del aeropuerto del cual se recolecta la información.
-
-**Entidad_Infraestructura:** Variable cualitativa que indica a que entidad pertenece la infraestructura del aeropuerto del cual se recolecta la información.
-
-**IT:** Variable cuantitativa que representa los ingresos totales en dolares que ha registrado el aeropuerto
-
-**IR:** Variable cuantitativa que representa los ingresos regulados en dolares que ha registrado el aeropuerto
-
-**TUUAN**: Variable cuantitativa que representa el ingreso en dolares que ha generado la *TARIFA UNIFICADA POR USO DE AEROPUERTO de tipo nacional.*
-
-**TUUAN**: Variable cuantitativa que representa el ingreso en dolares que ha generado la *TARIFA UNIFICADA POR USO DE AEROPUERTO de tipo internacional.*
-
-**NPI:** Variable cuantitativa que representa el numero de pasajeros internacionales que ha registrado el aeropuerto
-
-**NPN:** Variable cuantitativa que representa el numero de pasajeros nacionales que ha registrado el aeropuerto
-
-**IRAD_VER:** Variable categórica que representa si el aeropuerto obtiene ingresos por aterrizaje y despegue.
-
-**IRAD:** Variable cuantitativa que representa el ingreso en dolares del aeropuerto por aterrizaje y despegue.
-
-**AADM_VER:** Variable categórica que representa si el aeropuerto obtiene ingresos por el alquiler de áreas de mantenimiento.
-
-**AADM:** Variable cuantitativa que representa el ingreso en dolares por el alquiler de áreas de mantenimiento.
-
-**ADEP_VER:** Variable categórica que representa si el aeropuerto obtiene ingresos por el alquiler de espacios de publicidad.
-
-**ADEP:** Variable cuantitativa que representa el ingreso en dolares por el alquiler de espacios de publicidad.
-
-**ALC_VER:** Variable categórica que representa si el aeropuerto obtiene ingresos por el alquiler de locales comerciales.
-
-**ALC:** Variable cuantitativa que representa el ingreso en dolares por el alquiler de locales comerciales.
-
-**AOOA_VER:** Variable categórica que representa si el aeropuerto obtiene ingresos por el alquiler de oficinas de operaciones de aerolíneas.
-
-**AOOA:** Variable cuantitativa que representa el ingreso en dolares por el alquiler de oficinas de operaciones de aerolíneas.
-
-**ADAH_VER:** Variable categórica que representa si el aeropuerto obtiene ingresos por el alquiler de almacenes/hangares.
-
-**ADAH:** Variable cuantitativa que representa el ingreso en dolares por el alquiler de almacenes/hangares.
-
-**AEHE_VER:** Variable categórica que representa si el aeropuerto obtiene ingresos por la atención en horas extras.
-
-**AEHE:** Variable cuantitativa que representa el ingreso en dolares por la atención en horas extras.
-
-**IREA_VER:** Variable categórica que representa si el aeropuerto obtiene ingresos por el estacionamiento de aeronaves.
-
-**IREA:** Variable cuantitativa que representa el ingreso en dolares por el estacionamiento de aeronaves.
-
-**IRIF_VER:** Variable categórica que representa si el aeropuerto obtiene ingresos por reembolso en ingresos financieros.
-
-**IRIF:** Variable cuantitativa que representa el ingreso en dolares por reembolso en ingresos financieros.
-
-**IRR_VER:** Variable categórica que representa si el aeropuerto obtiene ingresos por reembolsos.
-
-**IRR:** Variable cuantitativa que representa el ingreso en dolares por reembolsos.
-
-**NP:** Variable cuantitativa que representa el numero de pasajeros totales que ha registrado el aeropuerto.
-
-# Descriptores Numéricos
+## Descriptores Numéricos
 
 ```{r}
 cv <- function(x){
@@ -670,9 +683,9 @@ De la tabla podemos conseguir la siguiente información:
 
 -   Se aprecia un fenómeno que la mediana y el rango intercuartil de la variable Pasajeros internacionales es 0. Esto quiere decir que hay muchos aeropuertos los cuales no suelen recibir pasajeros internacionales.
 
-# Descriptores Gráficos
+## Descriptores Gráficos
 
-## Numero de Pasajeros vs Ingresos Totales
+### Numero de Pasajeros vs Ingresos Totales
 
 ```{r}
 plot(DF$NP/1000, DF$IT/1000000, xlab = "Numero de pasajeros (miles)", ylab = "Ingresos totales (millones de US$)", col="darkgreen", pch="•", xlim = c(0,2000))
@@ -706,7 +719,7 @@ plot(DF$NP/1000, DF$IT/1000000, xlab = "Numero de pasajeros (miles)", ylab = "In
 abline(a= -0.14890, b=0.01646, col="green")
 ```
 
-## Numero de Pasajeros Nacionales e Internacionales vs Ingresos Totales
+### Numero de Pasajeros Nacionales e Internacionales vs Ingresos Totales
 
 ```{r}
 par(mfrow=c(1,2))
@@ -762,7 +775,7 @@ plot(DF$NPI/1000, DF$IT/1000000, xlab = "Numero de pasajeros internacionales (mi
 abline(a= 0.31996, b=0.04772, col="#0077b6")
 ```
 
-## Analizando la distribución de Ingresos Totales
+### Analizando la distribución de Ingresos Totales
 
 ```{r}
 plot_ly(x = ~DF$IT/1000000,
@@ -823,7 +836,7 @@ Gracias a los 3 gráficos podemos concluir que:
 -   El aeropuerto de Lima cuya entidad prestadora es la LAP, es la responsable de los datos atípicos y además es el que más ingresos totales genera.
 -   La infraestructura LAP trabaja en Lima y se refiere al Aeropuerto Internacional Jorge Chávez. Esto nos quiere decir que en el Perú, el aeropuerto que genera más ingresos es el Jorge Chávez.
 
-## Numero de Pasajeros vs Aeropuertos
+### Numero de Pasajeros vs Aeropuertos
 
 ```{r}
 plot_ly(DF,y = ~NP/1000,
@@ -847,7 +860,7 @@ plot_ly(DF,x = ~NP/1000,
 
 El gráfico nos deja en claro la estrecha relación de la cantidad de pasajeros con la de ingresos que posee el aeropuerto de Lima y como este sobresale por mucho del resto de aeropuertos. Se concluye que los datos atípicos provenientes de ingresos totales eran y nos contaban sobre las peculiaridades del caso Lima.
 
-## Ingresos T U U A Total vs Ingresos Totales
+### Ingresos T U U A Total vs Ingresos Totales
 
 Se eligió la comparación de las T U U A, porque esta es la TARIFA UNIFICADA POR USO DE AEROPUERTO, es decir es una tarifa que como consumidores debemos de pagar. El objetivo aquí es analizar cuanto de los ingresos totales provienen directamente de los bolsillos de los pasajeros.
 
@@ -885,7 +898,7 @@ plot(TUUA/100000, DF$IT/1000000, xlab = "Ingresos TUUA total (millones de US$)",
 abline(a= 0.1557, b=0.2190, col="#c9a227")
 ```
 
-## Ingresos TUUA Nacional y TUUA Internacional vs Ingresos Totales
+### Ingresos TUUA Nacional y TUUA Internacional vs Ingresos Totales
 
 ```{r}
 par(mfrow=c(1,2))
@@ -944,7 +957,7 @@ abline(a= 0.3295, b=3.6882, col="#43aa8b")
 
 Detallamos entonces que los ingresos totales guardan una alta relación con los ingresos generados por las TUUA y dependen en gran medida de estas, ergo la cantidad de pasajeros.
 
-## Pandemia vs PostPandemia
+### Pandemia vs PostPandemia
 
 ```{r}
 DF2020 <- filter(DF, DF$Año=="2020")
@@ -996,9 +1009,9 @@ Del gráfico de barras podemos observar:
 
 -   La distribución de los ingresos totales en base a los meses del año.
 
--   Existe una asimetria notable entre los datos en el año 2020. Esta asimetria se explica por el surgimiento del Covid-19. Los ingresos bajaron bastante en proporción a la media.
+-   Existe una asimetría notable entre los datos en el año 2020. Esta asimetría se explica por el surgimiento del Covid-19. Los ingresos bajaron bastante en proporción a la media.
 
--   Un patrón de crecimiento sobre los ingresos totales dependiendo de los meses. En algunos meses los ingresos totales son esperado a ser mayores que en otros meses, uno de los factores que pueden influir en esto son las vacaciones pues están estrechamente relacionas con el número de pasajeros a abordarr en un aeropuerto.
+-   Un patrón de crecimiento sobre los ingresos totales dependiendo de los meses. En algunos meses los ingresos totales son esperado a ser mayores que en otros meses, uno de los factores que pueden influir en esto son las vacaciones pues, están estrechamente relacionadas con el número de pasajeros a abordar en un aeropuerto.
 
 ```{r}
 
@@ -1097,6 +1110,6 @@ De los gráficos evolutivos podemos apreciar:
 
 -   A partir del mes de Abril se estabilizan los ingresos del año 2020. Estos son bajos pero se observa una tendencia ascendente. Tendencia que continua en los años 2021 y 2022 a medida que el confinamiento se levanta, la pandemia se controla y el numero de pasajeros aumenta.
 
-## Conclusión
+# **Conclusión**
 
-A razón de resumen, en nuestro análisis sobre la relación entre el número de pasajeros y los ingresos totales de los aeropuertos graficamos la distribución de los ingresos totales, las diferentes relaciones entre variables tales como la última vista (Ingresos TUUA vs Ingresos Totales), (cantidad de pasajeros y aeropuertos). Asimismo observamos y describimos el comportamiento evolutivo de los ingresos totales respecto a los años vividos en pandemia y post-pandemia. Finalemnte, con la información recolectada y el estudio realizado se encontró que los ingresos totales generados por los aeropuertos en el Perú dependente altamente en los consumidores o pasajeros, siendo la TUUA el ejemplo más claro de ello.
+A razón de resumen, en nuestro análisis sobre la relación entre el número de pasajeros y los ingresos totales de los aeropuertos hemos graficado la distribución de los ingresos totales, las diferentes relaciones entre variables tales como la última vista (Ingresos TUUA vs Ingresos Totales), (cantidad de pasajeros y aeropuertos). Asimismo observamos y describimos el comportamiento evolutivo de los ingresos totales respecto a los años vividos en pandemia y post-pandemia. Finalmente, con la información recolectada y el estudio realizado se encontró que los ingresos totales generados por los aeropuertos en el Perú depende altamente en los consumidores o pasajeros, siendo la variable TUUA el ejemplo más claro de ello.
